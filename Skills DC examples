@@ -1,0 +1,485 @@
+/* Creator: Fridan99
+ * This will create a dialog window with buttons for each 5e Skills 
+ * You can select a skill and see a printout to the chat 
+ * some minor things are modified, such as the actor endowment that instead of advantage in Deception, gives it in Performance, following the UA of the D&D One Direct.
+*/
+
+let dialogOptions = {
+  title: "Choose a Table",
+  content: `<p>Which table would you like to display?</p>`,
+  buttons: {
+    acrobatics: {
+      label: "<img src='https://i.ibb.co/XCYfGSK/acrobatic.png' style='width:70%; margin-bottom: -30px;'><br><br>Acrobatics",
+      callback: () => showTable('Acrobatics')
+    },
+    animalhandling: {
+      label: "<img src='https://i.ibb.co/Sc8SLVg/cavalry.png' style='width:80%; margin-bottom: -30px;'><br><br>Animal Handling",
+      callback: () => showTable('Animal Handling')
+    },
+    arcana: {
+      label: "<img src='https://i.ibb.co/2yW57Vp/spell-book.png' style='width:90%; margin-bottom: -30px;'><br><br>Arcana",
+      callback: () => showTable('Arcana')
+    },
+    athletics: {
+      label: "<img src='https://i.ibb.co/CQ7ndby/jumping-rope.png' style='width:80%; margin-bottom: -30px;'><br><br>Athletics",
+      callback: () => showTable('Athletics')
+    },
+    deception: {
+      label: "<img src='https://i.ibb.co/jbV1PC8/convince.png' style='width:70%; margin-bottom: -30px;'><br><br>Deception",
+      callback: () => showTable('Deception')
+    },
+    history: {
+      label: "<img src='https://i.ibb.co/7vRgsRp/classical-knowledge.png' style='width:60%; margin-bottom: -30px;'><br><br>History",
+      callback: () => showTable('History')
+    },
+    insight: {
+      label: "<img src='https://i.ibb.co/bdT5PRB/think.png' style='width:60%; margin-bottom: -30px;'><br><br>Insight",
+      callback: () => showTable('Insight')
+    },
+    intimidation: {
+      label: "<img src='https://i.ibb.co/x6vkxw5/confrontation.png' style='width:60%; margin-bottom: -30px;'><br><br>Intimidation",
+      callback: () => showTable('Intimidation')
+    },
+    investigation: {
+      label: "<img src='https://i.ibb.co/z6m8qr4/magnifying-glass.png' style='width:60%; margin-bottom: -30px;'><br><br>Investigation",
+      callback: () => showTable('Investigation')
+    },
+    medicine: {
+      label: "<img src='https://i.ibb.co/C7BkbqK/first-aid-kit.png' style='width:60%; margin-bottom: -30px;'><br><br>Medicine",
+      callback: () => showTable('Medicine')
+    },
+    nature: {
+      label: "<img src='https://i.ibb.co/ZdhtRYb/forest.png' style='width:60%; margin-bottom: -30px;'><br><br>Nature",
+      callback: () => showTable('Nature')
+    },
+    perception: {
+      label: "<img src='https://i.ibb.co/PmzrxDY/semi-closed-eye.png' style='width:60%; margin-bottom: -30px;'><br><br>Perception",
+      callback: () => showTable('Perception')
+    },
+    performance: {
+      label: "<img src='https://i.ibb.co/xJq0M6H/sing.png' style='width:60%; margin-bottom: -30px;'><br><br>Performance",
+      callback: () => showTable('Performance')
+    },
+    persuasion: {
+      label: "<img src='https://i.ibb.co/mt4p6T3/public-speaker.png' style='width:70%; margin-bottom: -30px;'><br><br>Persuasion",
+      callback: () => showTable('Persuasion')
+    },
+    religion: {
+      label: "<img src='https://i.ibb.co/mcmLM76/church.png' style='width:80%; margin-bottom: -30px;'><br><br>Religion",
+      callback: () => showTable('Religion')
+    },
+    sleightOfHand: {
+      label: "<img src='https://i.ibb.co/TbbRrmN/snatch.png' style='width:80%; margin-bottom: -30px;'><br><br>Sleight of Hand",
+      callback: () => showTable('Sleight of Hand')
+    },
+    stealth: {
+      label: "<img src='https://i.ibb.co/SNB22Xc/hood.png' style='width:80%; margin-bottom: -30px;'><br><br>Stealth",
+      callback: () => showTable('Stealth')
+    },
+    survival: {
+      label: "<img src='https://i.ibb.co/Jr0dy4t/pyre.png' style='width:80%; margin-bottom: -30px;'><br><br>Survival",
+      callback: () => showTable('Survival')
+    }
+  }
+};
+
+new Dialog(dialogOptions).render(true);
+
+
+
+function showTable(skill) {
+  let content = '';
+  if (skill === 'Acrobatics') {
+    content = `
+    <table>
+      <caption><strong><small>ACROBATICS</small></strong></caption>
+      <tr><td style="padding-right: 50px;"><strong><small>Pirouettes</small></strong></td><td style="text-align: center;"><strong><small>Acrobatics DC</small></strong></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Ignore first 10 feet fallen *</small></td><td style="text-align: center;"><small>15</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Ignore first 20 feet fallen</small></td><td style="text-align: center;"><small>20</small></td></tr>
+    </table>
+<p><small>● If you are <span style="color:red;">proficient in Acrobatics</span>, you automatically ignore the first 10 feet of fallen. *</small></p>
+    <table>
+    <td style="padding-right: 50px;"><strong><small>Surface Width</small></strong></td><td style="text-align: center;"><strong><small>Acrobatics DC</small></strong></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Surface Width > 3 feet wide *</small></td><td style="text-align: center;"><small>0</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Surface Width 1–3 feet wide *</small></td><td style="text-align: center;"><small>5</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Surface Width 7–11 inches wide</small></td><td style="text-align: center;"><small>10</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Surface Width 2–6 inches wide</small></td><td style="text-align: center;"><small>15</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Surface Width < 2 inches wide</small></td><td style="text-align: center;"><small>20</small></td></tr>
+    </table>
+    <table>
+    <td style="padding-right: 50px;"><strong><small>Acrobatics Modifiers </small></strong></td><td style="text-align: center;"><strong><small>DC Modifier</small></strong></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Slightly obstructed (gravel, sand)</small></td><td style="text-align: center;"><small>+2</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Severely obstructed (cavern, rubble)</small></td><td style="text-align: center;"><small>+5</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Slightly slippery (wet)</small></td><td style="text-align: center;"><small>+2</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Severely slippery (icy)</small></td><td style="text-align: center;"><small>+5</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Slightly sloped (<45°)</small></td><td style="text-align: center;"><small>+2</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Severely sloped (>45°)</small></td><td style="text-align: center;"><small>+5</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Slightly unsteady (boat in rough water)</small></td><td style="text-align: center;"><small>+2</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Moderately unsteady (boat in a storm)</small></td><td style="text-align: center;"><small>+5</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Severely unsteady (earthquake)</small></td><td style="text-align: center;"><small>+10</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Move at full speed on narrow or uneven surfaces *</small></td><td style="text-align: center;"><small>+5</small></td></tr>
+    </table>
+<p><small>● This does not apply to checks made to jump. *</small></p>
+    `;
+  } else if (skill === 'Animal Handling') {
+    content = `
+    <table>
+      <caption><strong><small>ANIMAL HANDLING</small></strong></caption>
+      <tr><td><strong><small>Animal handling check</small></strong></td><td><strong><small>DC</small></strong></td></tr>
+      <tr><td><small>Intuit a beast intentions</small></td><td><small>5</small></td></tr>
+      <tr><td><small>Calm down a domesticated beast</small></td><td><small>10</small></td></tr>
+      <tr><td><small>Keep a mount from getting spooked</small></td><td><small>10</small></td></tr>
+      <tr><td><small>Control a mount in a risky maneuver</small></td><td><small>12</small></td></tr>
+      <tr><td><small>Calm down a wild beast</small></td><td><small>15</small></td></tr>
+      <tr><td><small>Calm down a trained beast</small></td><td><small>20</small></td></tr>
+    </table>
+<h5><u>Taming a Beast</u></h5>
+<p><small>Generally speaking, a beast is indifferent towards any given tamer - it might also be afraid and attempting to flee, or hungry and attempting to eat the tamer, but neither of these are genuine hostility, just as freezing in place in fear is not genuine friendliness. In order to tame a beast, it must be indifferent to you - a friendly beast is already tamed, and a hostile one can't be tamed. References below to an animal's stats are relative to an adult's stats - for example, for hit dice, the adult's hit dice are the relevant value.<br>
+
+<p class="indent">Taming a beast requires a <strong>number of successful Animal Handling checks equal to its hit dice</strong>. The DC of the <strong>DC check is 10 + the beast’s CR (rounding down)</strong>, and the tamer has <span style="color:red;">advantage</span> on the check if they are also <span style="color:red;">proficient in Nature</span>. It takes a <strong>tenday to perform a check</strong>. If a check is failed for a third time on a beast, it becomes hostile to the tamer, and cannot ever be tamed by them.<br>
+
+<p class="indent">If the beast is raised from a puppy, the difficulty decreases by 5.</small></p>
+    `;
+  } else if (skill === 'Arcana') {
+    content = `
+    <table>
+      <caption><strong><small>ARCANA</small></strong></caption>
+      <tr><td style="width:80%"><strong><small>Arcana check</small></strong></td><td style="padding-left:30px;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width:80%"><small>Know about the planes of existence, and the inhabitants of those planes </small></td><td style="padding-left:30px;"><small>15</small></td></tr>
+      <tr><td style="width:80%"><small>Know about eldritch symbols, magic spells or effects in general</small></td><td style="padding-left:30px;"><small>20</small></td></tr>
+      <tr><td style="width:80%"><small>Know about magical traditions</small></td><td style="padding-left:30px;"><small>20</small></td></tr>
+      <tr><td style="width:80%"><small>Know about magic rituals</small></td><td style="padding-left:30px;"><small>20</small></td></tr>
+    </table>
+<h5><u>Identify a Spell</u></h5>
+<p><small>Sometimes a character wants to identify a spell that someone else is casting or that was already cast. To do so, a character can use their <span style="color:red;">reaction</span> to identify a spell as it's being cast, or they can use an <span style="color:red;">action</span> <u>on their turn</u> to identify a spell by its effect after it is cast.<br>
+
+<p class="indent">If the character perceived the casting, the spell's effect, or both, the character can make an Intelligence (Arcana) check with the reaction or action. The <strong>DC equals 15 + the spell's level</strong>. <u>If the spell is cast as a class spell and the character is a member of that class</u>, the check is made with <span style="color:red;">advantage</span>. For example, if the spellcaster casts a spell as a cleric, another cleric has advantage on the check to identify the spell. Some spells aren't associated with any class when they're cast, such as when a monster uses its Innate Spellcasting trait.<br>
+
+<p class="indent">This Intelligence (Arcana) check represents the fact that identifying a spell requires a quick mind and familiarity with the theory and practice of casting. This is true even for a character whose spellcasting ability is Wisdom or Charisma. Being able to cast spells doesn't by itself make you adept at deducing exactly what others are doing when they cast their spells.
+</small></p>
+    `;
+  } else if (skill === 'Athletics') {
+    content = `
+    <h4 style="text-align:center;"><strong>ATHLETICS</strong></h4>
+    <hr>
+<p><small>● If you are <span style="color:red;">proficient in the Athletics</span>, you automatically succeed any swim or climb check <strong>DC 10</strong> or lower.</small></p>
+    <hr>
+    <p><small>Your Strength (Athletics) check covers difficult situations you encounter while climbing, jumping, or swimming. Examples include the following activities:<br>
+
+<p class="indent">You attempt to climb a sheer or slippery cliff, avoid hazards while scaling a wall, or cling to a surface while something is trying to knock you off.<br>
+<p class="indent">You try to jump an unusually long distance or pull off a stunt mid-jump.<br>
+<p class="indent">You struggle to swim or stay afloat in treacherous currents, storm-tossed waves, or areas of thick seaweed. Or another creature tries to push or pull you underwater or otherwise interfere with your swimming.</small>
+<hr>
+<p class="indent"><small>A character who has <span style="color:red;">proficiency in the Athletics</span> can take disadvantage on the check to grant advantage to another party member’s check (essentially compensating for a less skilled companion), to help that character if it finds in distress when swimming (even rescue it if he is unconscious) or assist it when climbing.</small></p>
+    `;
+  } else if (skill === 'Deception') {
+    content = `
+    <h4 style="text-align:center;"><strong>DECEPTION</strong></h4>
+    <hr>  
+<p><small>Your Charisma (Deception) check determines whether you can convincingly hide the truth, either verbally or through your actions. This deception can encompass everything from misleading others through ambiguity to telling outright lies.<br> 
+
+<p class="indent"><strong>Typical situations</strong>: trying to fast-talk a guard, con a merchant, earn money through gambling, pass yourself off in a disguise, dull someone’s suspicions with false assurances, or maintain a straight face while telling a blatant lie, cheat in a game, contested by <strong>Wisdom (Insight)</strong> check.</small>
+<hr>
+<p><small><strong>Circumstances of lie</strong>. Sometimes, depending on the circumstances, modifiers can be applied to the roll check.<br>  
+
+<p class="indent"><span style="color:red;"><strong>Advantage</strong></span>. The target wants to believe you, the target is drunk or impaired or you possess convincing proof up to.<br>                           
+
+<p class="indent"><span style="color:red;"><strong>Disadvantage</strong></span>. The lie is unlikely or far-fetched.<br>                                             
+
+<p class="indent">In other occasions directly the lie is impossible, therefore the check fails automatically.</small></p>
+    `;
+  } else if (skill === 'History') {
+    content = `
+    <table>
+      <caption><strong><small>HISTORY</small></strong></caption>
+      <tr><td style="width: 80%;"><strong><small>History check</small></strong></td><td style="padding-left: 30px;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width: 80%;"><small>Recall information about local rulers, laws, protocol, taboos or strange customs</small></td><td style="padding-left: 30px;"><small>10</small></td></tr>
+      <tr><td style="width: 80%;"><small>Knowledge about historical events, legendary people, ancient kingdoms past disputes, recent wars, and lost civilizations</small></td><td style="padding-left: 30px;"><small>15</small></td></tr>
+    </table>
+    <table>
+<h5><u>Decipher message</u></h5>
+<p><small>You can decipher writing in an unfamiliar language or a message written in an incomplete or archaic form.</small></p>
+      <hr>
+      <tr><td style="width: 80%;"><strong><small>Decipher</small></strong></td><td style="text-align: center;"><strong><small>History DC</small></strong></td></tr>
+      <tr><td style="width: 80%;"><small>Simple message</small></td><td style="text-align: center;"><small>15</small></td></tr>
+      <tr><td style="width: 80%;"><small>Standard texts</small></td><td style="text-align: center;"><small>20</small></td></tr>
+      <tr><td style="width: 80%;"><small>Intricate, exotic or very old text</small></td><td style="text-align: center;"><small>25</small></td></tr>
+    </table>
+<p><small>If the check succeeds, you understand the general content of a piece of writing about one page long (or the equivalent). If the check fails by <u>5 or more</u>, you avoid drawing a false conclusion about the text.</small></p>                                                                                                                                                                                                                                                                  
+    `;
+  } else if (skill === 'Insight') {
+    content = `
+    <table>
+      <caption><strong><small>INSIGHT</small></strong></caption>
+      <tr><td><strong><small>Insight check</small></strong></td><td><strong><small>DC</small></strong></td></tr>
+      <tr><td><small>Hunch</small></td><td><small>15</small></td></tr>
+      <tr><td><small>Sense enchantment</small></td><td><small>20 or 15</small></td></tr>
+      <tr><td><small>Discern secret message</small></td><td><small>varies</small></td></tr>
+    </table>
+<h5><u>Hunch</u></h5>
+<p><small>This use of the skill involves making a gut assessment of the social situation. You can get the feeling from another’s behavior that something is wrong, such as when you’re talking to an impostor. Alternatively, you can get the feeling that someone is trustworthy.</small>
+<hr>
+<h5><u>Sense Enchantment</u></h5>
+<p><small>You can tell that someone’s behavior is being influenced by an enchantment effect even if that person isn’t aware of it. The usual DC is 20, but if the target is dominated (see dominate person), the DC is only 15 because of the limited range of the target’s activities.</small>
+<hr>
+<h5><u>Discern Secret Message</u></h5>
+<p><small>You may use Insight to detect that a hidden message is being transmitted via the Deception skill. In this case, your Insight check is opposed by the Deception check of the character transmitting the message. For each piece of information relating to the message that you are missing, you take a  –2 penalty on your Insight check. If you succeed by 4 or less, you know that something hidden is being communicated, but you can’t learn anything specific about its content. If you beat the DC by 5 or more, you intercept and understand the message. If you fail by 4 or less, you don’t detect any hidden communication. If you fail by 5 or more, you might infer false information.</small></p>
+    `;
+  } else if (skill === 'Intimidation') {
+content = `
+    <table>
+      <caption><strong><small>INTIMIDATION</small></strong></caption>
+      <tr><td style="width: 80%;"><strong><small>Friendly Creature's Reaction</small></strong></td><td style="text-align: center; white-space: nowrap;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width: 80%;"><small>The creature does as asked without taking risks or making sacrifices.</small></td><td style="text-align: center;"><small>0</small></td></tr>
+      <tr><td style="width: 80%;"><small>The creature accepts a minor risk or sacrifice to do as asked.</small></td><td style="text-align: center;"><small>10</small></td></tr>
+      <tr><td style="width: 80%;"><small>The creature accepts a significant risk or sacrifice to do as asked.</small></td><td style="text-align: center;"><small>20</small></td></tr>
+    </table>
+    <table>
+      <tr><td style="width: 80%;"><strong><small>Indifferent Creature's Reaction</small></strong></td><td style="text-align: center; white-space: nowrap;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width: 80%;"><small>The creature offers no help but does no harm.</small></td><td style="text-align: center;"><small>5</small></td></tr>
+      <tr><td style="width: 80%;"><small>The creature does as asked as long as no risks or sacrifices are involved.</small></td><td style="text-align: center;"><small>10</small></td></tr>
+      <tr><td style="width: 80%;"><small>The creature accepts a minor risk or sacrifice to do as asked.</small></td><td style="text-align: center;"><small>20</small></td></tr>
+    </table>
+    <table>
+      <tr><td style="width: 80%;"><strong><small>Hostile Creature's Reaction</small></strong></td><td style="text-align: center; white-space: nowrap;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width: 80%;"><small>The creature opposes the adventurers’ actions and might take risks to do so.</small></td><td style="text-align: center;"><small>0</small></td></tr>
+      <tr><td style="width: 80%;"><small>The creature offers no help out does no harm.</small></td><td style="text-align: center;"><small>15</small></td></tr>
+      <tr><td style="width: 80%;"><small>The creature does as asked as long as no risks or sacrifices are involved.</small></td><td style="text-align: center;"><small>20</small></td></tr>
+    </table>
+<p><small><strong>Special:</strong> Be proficient with Torture’s tools grants you advantage to any Strength or Charisma (Intimidation) check when torturing a victim with intent to subdue or kill, over the course of 1 hour.</small></p>
+<hr>
+<p><small>If you succeed the check, the target gives you the information you desire, takes actions that do not endanger it, or otherwise offers limited assistance. After the Intimidate expires, the target treats you as unfriendly and may report you to local authorities. If you fail the check by 5 or more, the target attempts to deceive you or otherwise hinder your activities.</p>
+    `;
+  } else if (skill === 'Investigation') {
+    content = `
+  <table>
+  <caption><strong><small>INVESTIGATION</small></strong></caption>
+  <tr>
+    <td style="width:80%"><strong><small>Investigation check</small></strong></td>
+    <td style="padding-left:10px;"><strong><small>DC</small></strong></td>
+  </tr>
+  <tr>
+    <td style="width:80%"><small>Discern from the appearance of a wound what kind of weapon dealt it</small></td>
+    <td style="padding-left:10px;"><small>10</small></td>
+  </tr>
+  <tr>
+    <td style="width:80%"><small>Determine the weakest point in a tunnel that could cause it to collapse</small></td>
+    <td style="padding-left:10px;"><small>15</small></td>
+  </tr>
+  <tr>
+    <td style="width:80%"><small>Deducing what might have happened in a scene where there are clues</small></td>
+    <td style="padding-left:10px;"><small>15</small></td>
+  </tr>
+  <tr>
+    <td style="width:80%"><small>Perform library research in search of some general or specific knowledge</small></td>
+    <td style="padding-left:10px;"><small>15</small></td>
+  </tr>
+  <tr>
+    <td style="width:80%"><small>Deduce the location of a hidden object</small></td>
+    <td style="padding-left:10px;"><small>20</small></td>
+  </tr>
+  <tr>
+    <td style="width:80%"><small>Disarming a trap or finding out the mechanism of a secret door</small></td>
+    <td style="padding-left:10px;"><small>varies</small></td>
+  </tr>
+</table>
+<hr>
+<h5><u>Gather Information</u></h5>
+<p><small>You can also use Investigation to gather information about a specific topic or individual. To do this, you must spend at least [[/r 1d4]] hours canvassing people at local taverns, markets, and gathering places (paying 1gp). The DC of this check depends on the obscurity of the information sought, but for most commonly known facts, gossips or rumors it is <strong>10</strong>. For obscure or secret knowledge, the DC might increase to <strong>20</strong> or higher. The GM might rule that some topics are simply unknown to common folk.</small></p>
+    `;
+  } else if (skill === 'Medicine') {
+    content = `
+    <table>
+      <caption><strong><small>MEDICINE</small></strong></caption>
+      <tr><td><strong><small>Medicine check</small></strong></td><td><strong><small>DC</small></strong></td></tr>
+      <tr><td><small>Stabilizing a creature *</small></td><td><small>10</small></td></tr>
+      <tr><td><small>Treat wounds from caltrops **</small></td><td><small>10</small></td></tr>
+      <tr><td><small>Identify causes of dead or wounds ***</small></td><td><small>10</small></td></tr>
+      <tr><td><small>Know if a creature is drugged, poisoned or ill</small></td><td><small>15</small></td></tr>
+    </table>
+<p><small>● The creature regains 1 hp after [[/r 1d4]] hours. <strong>No check</strong> required using a <strong>Healer's Kit</strong>. *</small><br>
+
+<p class="indent"><small>● Remove the half speed effect. **</small><br>
+
+<p class="indent"><small>● Discern the cause of death or wounds of a creature (DM can restrict if there is no visible effects or evidences). ***</small></p>
+<hr>
+<table>
+      <caption><strong><small>Special uses when <span style="color:red;">proficient</span></small></strong></caption>
+      <tr><td><strong><small>Medicine check</small></strong></td><td><strong><small>DC</small></strong></td></tr>
+      <tr><td><small>Long-term care</small></td><td><small>10</small></td></tr>
+      <tr><td><small>Treat deadly wounds **</small></td><td><small>15</small></td></tr>
+      <tr><td><small>Treat poison drug, poison’s or disease’s ***</small></td><td><small>save DC</small></td></tr>
+      <tr><td><small>Identify a drug, poison or disease</small></td><td><small>varies</small></td></tr>
+    </table>
+<p><small>● Long-term care: During 24h of care, the creature gains advantage to saving throw against poison and diseases (requires the use of a <strong>Healer’s kit</strong>). *</small><br>
+
+<p class="indent"><small>● Treat deadly wounds: Regain 1 additional hit point / level of the creature in a long rest (requires the use of a <strong>Healer’s kit</strong>). **</small><br>
+
+<p class="indent"><small>● Treat poison Poison’s or Disease’s: You can substitute a saving throw for a Medicine check when you identify the type of drug, poison or disease. ***</small></p>
+    `;
+  } else if (skill === 'Nature') {
+    content = `
+    <table>
+      <caption><strong><small>NATURE</small></strong></caption>
+      <tr><td><strong><small>Nature check</small></strong></td><td><strong><small>DC</small></strong></td></tr>
+      <tr><td><small>Recall lore about terrain, plants or animals</small></td><td><small>10</small></td></tr>
+      <tr><td><small>Recall lore about natural cycles and weather</small></td><td><small>15</small></td></tr>
+    </table>
+    <table>
+      <tr><td><strong><small>Nature check</small></strong></td><td><strong><small>DC</small></strong></td></tr>
+      <tr><td><small>Identify common plants</small></td><td><small>5</small></td></tr>
+      <tr><td><small>Identify uncommon plants</small></td><td><small>10</small></td></tr>
+      <tr><td><small>Identify rare plants</small></td><td><small>15</small></td></tr>
+      <tr><td><small>Identify very rare plants</small></td><td><small>20</small></td></tr>
+    </table>
+    `;
+} else if (skill === 'Perception') {
+    content = `
+    <table>
+      <caption><strong><small>PERCEPTION</small></strong></caption>
+      <tr><td style="padding-right: 50px;"><strong><small>Perception check</small></strong></td><td style="padding-left: 50px; text-align: center;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Hear the sound of battle</small></td><td style="padding-left: 50px; text-align: center;"><small>0</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Notice the stench of rotting garbage</small></td><td style="padding-left: 50px; text-align: center;"><small>0</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>A thunder rumbling</small></td><td style="padding-left: 50px; text-align: center;"><small>0</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Notice a visible creature</small></td><td style="padding-left: 50px; text-align: center;"><small>0</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Hear a dragon’s roar in the depths of a cave</small></td><td style="padding-left: 50px; text-align: center;"><small>5</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Detect the smell of smoke</small></td><td style="padding-left: 50px; text-align: center;"><small>5</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Determine if food is spoiled</small></td><td style="padding-left: 50px; text-align: center;"><small>10</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Hear the details of a conversation</small></td><td style="padding-left: 50px; text-align: center;"><small>10</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Hear the sound of a creature walking</small></td><td style="padding-left: 50px; text-align: center;"><small>10</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>The cries for help in a burning building</small></td><td style="padding-left: 50px; text-align: center;"><small>10</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Find the average concealed door</small></td><td style="padding-left: 50px; text-align: center;"><small>15</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>A mousse gnawing a piece of wood</small></td><td style="padding-left: 50px; text-align: center;"><small>15</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Hear the sound of a key being turned in a lock</small></td><td style="padding-left: 50px; text-align: center;"><small>15</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Hear the details of a whispered conversation</small></td><td style="padding-left: 50px; text-align: center;"><small>20</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Find a complicated secret door</small></td><td style="padding-left: 50px; text-align: center;"><small>20</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>A small lizard walking on a roof</small></td><td style="padding-left: 50px; text-align: center;"><small>20</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Hear a bow being drawn</small></td><td style="padding-left: 50px; text-align: center;"><small>25</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Sense a burrowing creature underneath you</small></td><td style="padding-left: 50px; text-align: center;"><small>25</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>The flutter of an insect several feet away</small></td><td style="padding-left: 50px; text-align: center;"><small>25</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Notice a pickpocket</small></td><td style="padding-left: 50px; text-align: center;"><small>Opposed by Sleight of Hand</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Notice a creature using Stealth</small></td><td style="padding-left: 50px; text-align: center;"><small>Opposed by Stealth</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Find a hidden trap</small></td><td style="padding-left: 50px; text-align: center;"><small>Varies by trap</small></td></tr>
+    </table>
+    <table>
+      <caption><strong><small>Perception Modifiers</small></strong></caption>
+      <tr><td style="padding-right: 50px;"><strong><small>Perception Modifiers</small></strong></td><td style="padding-left: 50px; text-align: center;"><strong><small>DC Modifier</small></strong></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Distance (every 50 ft.)</small></td><td style="padding-left: 50px; text-align: center;"><small>+2</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Through a closed door or a wall</small></td><td style="padding-left: 50px; text-align: center;"><small>Disadvantage</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Favorable conditions</small></td><td style="padding-left: 50px; text-align: center;"><small>Advantage</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Unfavorable or terrible conditions</small></td><td style="padding-left: 50px; text-align: center;"><small>Disadvantage</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Creature making the check is distracted</small></td><td style="padding-left: 50px; text-align: center;"><small>Disadvantage</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Creature making the check is asleep</small></td><td style="padding-left: 50px; text-align: center;"><small>Disadvantage (passive check)</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Creature or object is invisible</small></td><td style="padding-left: 50px; text-align: center;"><small>Special (see APENDIX A: Conditions)</small></td></tr>
+    </table>
+<p><small><strong>In most situations you must use your passive Wisdom (Perception)</strong>. Otherwise, if you are already using your action to do an active task, you can decide to roll d20 and use your active Wisdom (Perception).<br>
+
+<p class="indent"><strong>Examples of active Perception</strong>: be vigilant, searching actively a trap…</small></p>
+  <hr>
+<p><small>"Design intent (RAI): Passive Wisdom (Perception) is the norm. Only have someone roll an active Perception check if they initiate a search." "When you make a Perception check, you're really rolling to see if you can get a higher number (than your Passive Perception score). If you fail, your Passive Perception is still active. It's in effect creating a minimum". "Perception goes beyond sight and sound: it is a holistic expression of your character's perceptiveness" - J. Crawford</small></p>
+    `;
+  } else if (skill === 'Performance') {
+    content = `
+    <table>
+      <caption><strong><small>PERFORMANCE</small></strong></caption>
+      <tr><td style="width:80%;"><strong><small>Performance check</small></strong></td><td style="padding-left:10%;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width:80%;"><small>Change the voice to a lower or higher pitch, or to a different accent tone</small></td><td style="padding-left:10%;"><small>10</small></td></tr>
+      <tr><td style="width:80%;"><small>Changing the voice to a different gender</small></td><td style="padding-left:10%;"><small>15</small></td></tr>
+      <tr><td style="width:80%;"><small>Imitate the voice of a specific person</small></td><td style="padding-left:10%;"><small>20</small></td></tr>
+      <tr><td style="width:80%;"><small>Imitate the voice of a specific person of a different gender</small></td><td style="padding-left:10%;"><small>25</small></td></tr>
+    </table>
+<p><small>Normally when you make a disguise check, you want to change the voice with a successful Charisma (Performance) check. If a person knows the person being imitated well, a contest can be made against the <strong>Wisdom (Insight)</strong> of the listener.<br>
+ 
+<p class="indent">● The Actor feat, grants advantage on any Charisma (Performance) check.
+</small></p>
+    <table>
+      <tr><td style="width:80%;"><strong><small>Performance check</small></strong></td><td style="padding-left:10%;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width:80%;"><small>Routine performance. Trying to earn money by playing in public is akin to begging. You can earn [[/r 1d10]] cp/day.</small></td><td style="padding-left:10%;"><small>10</small></td></tr>
+      <tr><td style="width:80%;"><small>Enjoyable performance. In a prosperous city, you can earn [[/r 2d10]] sp/day. </small></td><td style="padding-left:10%;"><small>15</small></td></tr>
+      <tr><td style="width:80%;"><small>	Great performance. In a prosperous city, you can earn [[/r 1d8]] gp/day. In time, you may be invited to join a professional troupe and may develop a regional reputation. </small></td><td style="padding-left:10%;"><small>20</small></td></tr>
+      <tr><td style="width:80%;"><small>Memorable performance. In a prosperous city, you can earn [[/r 2d8]] gp/day. In time, you may come to the attention of noble patrons and develop a national reputation.</small></td><td style="padding-left:10%;"><small>25</small></td></tr>
+    </table>
+    `;
+  } else if (skill === 'Persuasion') {
+content = `
+    <table>
+      <caption><strong><small>PERSUASION</small></strong></caption>
+      <tr><td style="width: 80%;"><strong><small>Friendly Creature's Reaction</small></strong></td><td style="text-align: center; white-space: nowrap;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width: 80%;"><small>The creature does as asked without taking risks or making sacrifices.</small></td><td style="text-align: center;"><small>0</small></td></tr>
+      <tr><td style="width: 80%;"><small>The creature accepts a minor risk or sacrifice to do as asked.</small></td><td style="text-align: center;"><small>10</small></td></tr>
+      <tr><td style="width: 80%;"><small>The creature accepts a significant risk or sacrifice to do as asked.</small></td><td style="text-align: center;"><small>20</small></td></tr>
+    </table>
+    <table>
+      <tr><td style="width: 80%;"><strong><small>Indifferent Creature's Reaction</small></strong></td><td style="text-align: center; white-space: nowrap;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width: 80%;"><small>The creature offers no help but does no harm.</small></td><td style="text-align: center;"><small>5</small></td></tr>
+      <tr><td style="width: 80%;"><small>The creature does as asked as long as no risks or sacrifices are involved.</small></td><td style="text-align: center;"><small>10</small></td></tr>
+      <tr><td style="width: 80%;"><small>The creature accepts a minor risk or sacrifice to do as asked.</small></td><td style="text-align: center;"><small>20</small></td></tr>
+    </table>
+    <table>
+      <tr><td style="width: 80%;"><strong><small>Hostile Creature's Reaction</small></strong></td><td style="text-align: center; white-space: nowrap;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width: 80%;"><small>The creature opposes the adventurers’ actions and might take risks to do so.</small></td><td style="text-align: center;"><small>0</small></td></tr>
+      <tr><td style="width: 80%;"><small>The creature offers no help out does no harm.</small></td><td style="text-align: center;"><small>15</small></td></tr>
+      <tr><td style="width: 80%;"><small>The creature does as asked as long as no risks or sacrifices are involved.</small></td><td style="text-align: center;"><small>20</small></td></tr>
+    </table>
+<p><small>You can use the Charisma (Persuasion) skill to bargain for goods or services, including those of a magical nature. When discussing the sale of an item or service, you can attempt to lower the asking price with a Charisma (Persuasion) check made to influence NPC attitudes to accept a minor risk. If you manage to adjust the vendor’s attitude to helpful (most vendors begin as <span style="color:red;">indifferent</span> <strong>DC 20</strong>), the vendor <strong>lowers the asking price by 10%</strong>. If you worsen the vendor’s attitude, the vendor refuses to sell anything to you at this time.</p>
+    `;
+  } else if (skill === 'Religion') {
+    content = `
+    <table>
+      <caption><strong><small>RELIGION</small></strong></caption>
+      <tr><td style="width:80%"><strong><small>Religion check</small></strong></td><td style="padding-left:30px;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width:80%"><small>Recognize the symbol of a deity</small></td><td style="padding-left:30px;"><small>5</small></td></tr>
+      <tr><td style="width:80%"><small>Recall lore about deities</small></td><td style="padding-left:30px;"><small>10</small></td></tr>
+      <tr><td style="width:80%"><small>Know about mythic history</small></td><td style="padding-left:30px;"><small>12</small></td></tr>
+      <tr><td style="width:80%"><small>Know about ecclesiastic tradition</small></td><td style="padding-left:30px;"><small>14</small></td></tr>
+      <tr><td style="width:80%"><small>Know about rites and prayers</small></td><td style="padding-left:30px;"><small>15</small></td></tr>
+      <tr><td style="width:80%"><small>Know about religious hierarchies</small></td><td style="padding-left:30px;"><small>15</small></td></tr>
+      <tr><td style="width:80%"><small>Know about factions, orders</small></td><td style="padding-left:30px;"><small>15</small></td></tr>
+      <tr><td style="width:80%"><small>Know about practices of secret cults</small></td><td style="padding-left:30px;"><small>20</small></td></tr>
+    </table>
+    `;
+} else if (skill === 'Sleight of Hand') {
+    content = `
+    <table>
+      <caption><strong><small>SLEIGHT OF HAND</small></strong></caption>
+      <tr><td><strong><small>Sleight of Hand check</small></strong></td><td><strong><small>DC</small></strong></td></tr>
+      <tr><td><small>Conceal a small object</small></td><td><small>10</small></td></tr>
+<tr><td><small>Steal coins from target’s belt pouch</small></td><td><small>10</small></td></tr>
+      <tr><td><small>Conceal a small weapon</small></td><td><small>15</small></td></tr>
+      <tr><td><small>Steal something held in the target’s hand</small></td><td><small>15</small></td></tr>
+      <tr><td><small>Steal reaching into the target’s backpack</small></td><td><small>20</small></td></tr>
+    </table>
+    <p><small><strong>Planting an object on someone else</strong>: This is a check against the target’s passive Wisdom (Perception). You suffer disadvantage on the check unless the item is tiny.</small>
+    <p class="indent"><small><strong>Conceal item</strong>: You may only hide a light or one-handed weapon on your body. Anyone who searches you must make a Wisdom (Perception) check opposed by your Sleight of Hand check to find the weapon.</small>
+    <p class="indent"><small><strong>Steal item</strong>: You can attempt to take something from an adjacent creature. If your check result is below the target’s passive Wisdom (Perception) score, the target notices the attempt, regardless of whether you got the item. If the target is alert or suspicious, it rolls with advantage to notice you. During combat consider the target is alert.</small></p>
+    `;
+  } else if (skill === 'Stealth') {
+    content = `
+    <h4 style="text-align:center;"><strong>STEALTH</strong></h4>
+    <hr>
+    <p><small> Make a Dexterity (Stealth) check when you attempt to conceal yourself from enemies, slink past guards, slip away without being noticed, or sneak up on someone without being seen or heard.</small>
+<hr>
+<p><small>A character who has <span style="color:red;">proficiency in the Stealth</span> can take disadvantage on the check to grant advantage to another party member’s check (essentially compensating for a less stealthy companion).</small></p>
+    `;
+  } else if (skill === 'Survival') {
+    content = `
+    <table>
+      <caption><strong><small>SURVIVAL</small></strong></caption>
+      <tr><td><strong><small>Survival check</small></strong></td><td><strong><small>DC</small></strong></td></tr>
+      <tr><td><small>Predict the weather *</small></td><td><small>10</small></td></tr>
+      <tr><td><small>Avoid quicksand, razorvine hazards</small></td><td><small>10</small></td></tr>
+      <tr><td><small>Avoid thin ice, avalanche hazards</small></td><td><small>15</small></td></tr>
+      <tr><td><small>Search safe place to rest</small></td><td><small>15</small></td></tr>
+      <tr><td><small>Track, foraging food and water **</small></td><td><small>varies</small></td></tr>
+    </table>
+<p><small>● For every 2 points by which your Survival check result exceeds 10, you can 
+      predict the weather for one additional day in advance. *</small>
+
+<p class="indent"><small>● See the track and foraging food and water table. **<p class="indent"></small></p>
+    `;
+  }
+
+  ChatMessage.create({
+    content: content
+  });
+}
