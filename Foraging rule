@@ -1,0 +1,56 @@
+/* Creator: thatlonelybugbear
+ * Colaborators: Fridan99
+ * Need the Item Macro module
+ * Create a item, go to details, set ability check default, On use macro: ItemMacro (After Active Effects)
+ * Go to the Item Macro tab above, and paste the code
+ */
+
+const regions = {
+  "Mountains & Hills [DC 15]": 15,
+  "Forest & Jungle [DC 10]": 10,
+  "Desert [DC 20]": 20,
+  "Dungeon & Underdark [DC 20]": 20,
+  "City [DC 15]": 15,
+  "Artic [DC 20]": 20,
+  "Swamp [DC 15]": 15,
+  "Grassland [DC 10]": 10,
+  "Coast [DC 10]": 10
+};
+
+const dialogOptions = Object.entries(regions).reduce((acc, [type, value]) => acc += `<option value="${value}">${type}</option>`, ``);
+
+const title = 'Foraging';
+const buttons = ["Advantage", "Normal", "Disadvantage"].map((i) => ({ label: i, callback: () => {
+  const region = document.querySelector('#type')?.value;
+  return {region, rollType: i } }}));
+const content = `
+<p>Choose a region and type of roll!</p>
+<hr>
+<form>
+  <div class="form-group">
+    <label for="type">Saving Throw</label>
+    <div class="form-fields">
+      <select id="type">${dialogOptions}</select>
+    </div>
+  </div>
+</form>`;
+const close = () => false;
+
+const dialog = await Dialog.wait({ title, content, buttons, close }, { id: 'foraging-dialog' });
+if (!dialog) return;
+const diceFormula = dialog.rollType === 'Normal' ? '1d20' : '2d20';
+const survivalRoll = await new Roll(`${diceFormula}${dialog.rollType === 'Advantage' ? 'kh' : dialog.rollType === 'Disadvantage' ? 'kl' : ''} + @skills.sur.total`, token.actor.getRollData()).evaluate();
+let msg = await survivalRoll.toMessage({ flavor: `Survival skill check (the task takes 4h of effort)` });
+await game.dice3d?.waitFor3DAnimationByMessageID(msg.id);
+
+if (survivalRoll.total < dialog.region) {
+  await ChatMessage.create({content: `You don't get food or water`});
+} else {
+  const wisMod = token.actor.system.abilities.wis.mod;
+  const foodRoll = await new Roll(`1d6 + ${wisMod}`).evaluate();
+  msg = await foodRoll.toMessage({ flavor: `You get in pounds of food` });
+  await game.dice3d?.waitFor3DAnimationByMessageID(msg.id);
+  const waterRoll = await new Roll(`1d6 + ${wisMod}`).evaluate();
+  msg = await waterRoll.toMessage({ flavor: `You get in gallons of water` });
+  await game.dice3d?.waitFor3DAnimationByMessageID(msg.id);
+}
