@@ -1,4 +1,5 @@
 /* Creator: Fridan99
+ * Colaborators: thatlonelybugbear, thx for the CSS part
  * Create a sript macro, then paste the code 
  * This will create a dialog window with buttons for each 5e Skills 
  * You can select a skill and see a printout to the chat 
@@ -8,84 +9,97 @@
 
 let dialogOptions = {
   title: "Choose a Table",
-  content: `<p>Which table would you like to display?</p>`,
-  buttons: {
+  content: `<p>Which table would you like to display?</p>
+              <style>
+        #skillsDialog .dialog-buttons {
+            display: grid;
+            gap: 1em;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+        }
+          #skillsDialog .dialog-button-row {
+        mmax-width: 18px;  /* 50% of 36px */
+        max-height: 18px; /* 50% of 36px */
+    }
+        </style>
+
+            <div class='dialog-button-row'>`,
+buttons: {
     acrobatics: {
-      label: "<img src='https://i.ibb.co/XCYfGSK/acrobatic.png' style='width:70%; margin-bottom: -30px;'><br><br>Acrobatics",
+      label: "<img src='https://i.ibb.co/XCYfGSK/acrobatic.png' style='width:50%; margin-bottom: -30px;'><br><br>Acrobatics",
       callback: () => showTable('Acrobatics')
     },
     animalhandling: {
-      label: "<img src='https://i.ibb.co/Sc8SLVg/cavalry.png' style='width:80%; margin-bottom: -30px;'><br><br>Animal Handling",
+      label: "<img src='https://i.ibb.co/Sc8SLVg/cavalry.png' style='width:50%; margin-bottom: -30px;'><br><br>Animal Handling",
       callback: () => showTable('Animal Handling')
     },
     arcana: {
-      label: "<img src='https://i.ibb.co/2yW57Vp/spell-book.png' style='width:90%; margin-bottom: -30px;'><br><br>Arcana",
+      label: "<img src='https://i.ibb.co/2yW57Vp/spell-book.png' style='width:50%; margin-bottom: -30px;'><br><br>Arcana",
       callback: () => showTable('Arcana')
     },
     athletics: {
-      label: "<img src='https://i.ibb.co/CQ7ndby/jumping-rope.png' style='width:80%; margin-bottom: -30px;'><br><br>Athletics",
+      label: "<img src='https://i.ibb.co/CQ7ndby/jumping-rope.png' style='width:50%; margin-bottom: -30px;'><br><br>Athletics",
       callback: () => showTable('Athletics')
     },
     deception: {
-      label: "<img src='https://i.ibb.co/jbV1PC8/convince.png' style='width:70%; margin-bottom: -30px;'><br><br>Deception",
+      label: "<img src='https://i.ibb.co/jbV1PC8/convince.png' style='width:50%; margin-bottom: -30px;'><br><br>Deception",
       callback: () => showTable('Deception')
     },
     history: {
-      label: "<img src='https://i.ibb.co/7vRgsRp/classical-knowledge.png' style='width:60%; margin-bottom: -30px;'><br><br>History",
+      label: "<img src='https://i.ibb.co/7vRgsRp/classical-knowledge.png' style='width:50%; margin-bottom: -30px;'><br><br>History",
       callback: () => showTable('History')
     },
     insight: {
-      label: "<img src='https://i.ibb.co/bdT5PRB/think.png' style='width:60%; margin-bottom: -30px;'><br><br>Insight",
+      label: "<img src='https://i.ibb.co/bdT5PRB/think.png' style='width:50%; margin-bottom: -30px;'><br><br>Insight",
       callback: () => showTable('Insight')
     },
     intimidation: {
-      label: "<img src='https://i.ibb.co/x6vkxw5/confrontation.png' style='width:60%; margin-bottom: -30px;'><br><br>Intimidation",
+      label: "<img src='https://i.ibb.co/x6vkxw5/confrontation.png' style='width:50%; margin-bottom: -30px;'><br><br>Intimidation",
       callback: () => showTable('Intimidation')
     },
     investigation: {
-      label: "<img src='https://i.ibb.co/z6m8qr4/magnifying-glass.png' style='width:60%; margin-bottom: -30px;'><br><br>Investigation",
+      label: "<img src='https://i.ibb.co/z6m8qr4/magnifying-glass.png' style='width:50%; margin-bottom: -30px;'><br><br>Investigation",
       callback: () => showTable('Investigation')
     },
     medicine: {
-      label: "<img src='https://i.ibb.co/C7BkbqK/first-aid-kit.png' style='width:60%; margin-bottom: -30px;'><br><br>Medicine",
+      label: "<img src='https://i.ibb.co/C7BkbqK/first-aid-kit.png' style='width:50%; margin-bottom: -30px;'><br><br>Medicine",
       callback: () => showTable('Medicine')
     },
     nature: {
-      label: "<img src='https://i.ibb.co/ZdhtRYb/forest.png' style='width:60%; margin-bottom: -30px;'><br><br>Nature",
+      label: "<img src='https://i.ibb.co/ZdhtRYb/forest.png' style='width:50%; margin-bottom: -30px;'><br><br>Nature",
       callback: () => showTable('Nature')
     },
     perception: {
-      label: "<img src='https://i.ibb.co/PmzrxDY/semi-closed-eye.png' style='width:60%; margin-bottom: -30px;'><br><br>Perception",
+      label: "<img src='https://i.ibb.co/PmzrxDY/semi-closed-eye.png' style='width:50%; margin-bottom: -30px;'><br><br>Perception",
       callback: () => showTable('Perception')
     },
     performance: {
-      label: "<img src='https://i.ibb.co/xJq0M6H/sing.png' style='width:60%; margin-bottom: -30px;'><br><br>Performance",
+      label: "<img src='https://i.ibb.co/xJq0M6H/sing.png' style='width:50%; margin-bottom: -30px;'><br><br>Performance",
       callback: () => showTable('Performance')
     },
     persuasion: {
-      label: "<img src='https://i.ibb.co/mt4p6T3/public-speaker.png' style='width:70%; margin-bottom: -30px;'><br><br>Persuasion",
+      label: "<img src='https://i.ibb.co/mt4p6T3/public-speaker.png' style='width:50%; margin-bottom: -30px;'><br><br>Persuasion",
       callback: () => showTable('Persuasion')
     },
     religion: {
-      label: "<img src='https://i.ibb.co/mcmLM76/church.png' style='width:80%; margin-bottom: -30px;'><br><br>Religion",
+      label: "<img src='https://i.ibb.co/mcmLM76/church.png' style='width:50%; margin-bottom: -30px;'><br><br>Religion",
       callback: () => showTable('Religion')
     },
     sleightOfHand: {
-      label: "<img src='https://i.ibb.co/TbbRrmN/snatch.png' style='width:80%; margin-bottom: -30px;'><br><br>Sleight of Hand",
+      label: "<img src='https://i.ibb.co/TbbRrmN/snatch.png' style='width:50%; margin-bottom: -30px;'><br><br>Sleight of Hand",
       callback: () => showTable('Sleight of Hand')
     },
     stealth: {
-      label: "<img src='https://i.ibb.co/SNB22Xc/hood.png' style='width:80%; margin-bottom: -30px;'><br><br>Stealth",
+      label: "<img src='https://i.ibb.co/SNB22Xc/hood.png' style='width:50%; margin-bottom: -30px;'><br><br>Stealth",
       callback: () => showTable('Stealth')
     },
     survival: {
-      label: "<img src='https://i.ibb.co/Jr0dy4t/pyre.png' style='width:80%; margin-bottom: -30px;'><br><br>Survival",
+      label: "<img src='https://i.ibb.co/Jr0dy4t/pyre.png' style='width:50%; margin-bottom: -30px;'><br><br>Survival",
       callback: () => showTable('Survival')
     }
   }
 };
 
-new Dialog(dialogOptions).render(true);
+new Dialog(dialogOptions).render(true,{width:'740',id:'skillsDialog'});
 
 
 
