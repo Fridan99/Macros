@@ -28,7 +28,7 @@ const content = `
 <hr>
 <form>
   <div class="form-group">
-    <label for="type">Saving Throw</label>
+    <label for="type">Survival skill check</label>
     <div class="form-fields">
       <select id="type">${dialogOptions}</select>
     </div>
