@@ -1,7 +1,7 @@
 /* Creator: thatlonelybugbear
  * Colaborators: Fridan99
  * Need the Item Macro module
- * Create a item, go to details, set ability check default, On use macro: ItemMacro (After Active Effects)
+ * Create a item, go to details, set utility in the "Action Type", set default in the "Ability Modifier", On use macro: ItemMacro (After Active Effects)
  * Go to the Item Macro tab above, and paste the code
  */
 
