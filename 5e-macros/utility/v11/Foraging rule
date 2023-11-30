@@ -1,4 +1,5 @@
-/* Creator: thatlonelybugbear
+/*Version: 1.0.0
+ * Creator: thatlonelybugbear
  * Colaborators: Fridan99
  * Need the Item Macro module
  * Create a item, go to details, set utility in the "Action Type", set default in the "Ability Modifier", On use macro: ItemMacro (After Active Effects)
