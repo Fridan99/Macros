@@ -63,7 +63,7 @@ if (survivalRoll.total < regions[dialog.region].dc) {
     foodResult[foodType] = (foodResult[foodType] || 0) + 1;
   }
   const foodMessage = Object.entries(foodResult).sort().map(([type, count]) => `${count}x ${type}`).join(', ');
-  await ChatMessage.create({content: `You found the following types of food: ${foodMessage}`});
+  await ChatMessage.create({content: `<b>You found the following types of food</b>: ${foodMessage}`});
 if (dialog.region === "City [DC 15]") {
     await ChatMessage.create({content: `<span style="color:red">Note:</span> the meet probably be bird, cat, dog, or rat`});
   }
