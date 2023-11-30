@@ -107,7 +107,7 @@ const foodMessage = Object.entries(foodTypes)
   .sort(([typeA], [typeB]) => typeA.localeCompare(typeB))
   .map(([type, count]) => `${count > 1 ? count + 'x ' : ''}${type}`)
   .join(', ');
-  await ChatMessage.create({content: `You gathered the following types of food: ${foodMessage}`});
+  await ChatMessage.create({content: `<b>You gathered the following types of food</b>: ${foodMessage}`});
   if (dialog.region === "City [DC 15]") {
     await ChatMessage.create({content: `<span style="color:red">Note:</span> the meet probably be bird, cat, dog, or rat`});
   }
