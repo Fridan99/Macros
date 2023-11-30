@@ -72,9 +72,10 @@ if (!dialog2) return;
 const rangerOption = dialog2.rangerOption;
 
 let survivalBonus = '@skills.sur.total';
-let foodWaterBonus = `1d6 + ${wisMod}`;
+let foodBonus = `1d6 + ${wisMod}`;
+let waterBonus = `1d6 + ${wisMod}`;
 if (rangerOption == 1 || rangerOption == 2 || rangerOption == 3) {
-  foodWaterBonus = `2 * (1d6 + ${wisMod})`;
+  foodBonus = `2 * (1d6 + ${wisMod})`;
 }
 if (rangerOption == 2) {
   survivalBonus = '@skills.sur.total + ' + proficiencyBonus;
@@ -88,10 +89,10 @@ await game.dice3d?.waitFor3DAnimationByMessageID(msg.id);
 if (survivalRoll.total < dialog.region) {
   await ChatMessage.create({content: `You don't get food or water`});
 } else {
-  const foodRoll = await new Roll(`(${foodWaterBonus})`).evaluate();
+  const foodRoll = await new Roll(`(${foodBonus})`).evaluate();
   msg = await foodRoll.toMessage({ flavor: `You get in pounds of food` });
   await game.dice3d?.waitFor3DAnimationByMessageID(msg.id);
-  const waterRoll = await new Roll(`(${foodWaterBonus})`).evaluate();
+  const waterRoll = await new Roll(`(${waterBonus})`).evaluate();
   msg = await waterRoll.toMessage({ flavor: `You get in gallons of water` });
   await game.dice3d?.waitFor3DAnimationByMessageID(msg.id);
 }
