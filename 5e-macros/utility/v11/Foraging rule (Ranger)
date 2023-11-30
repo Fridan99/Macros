@@ -6,18 +6,18 @@
  */
 
 const regions = {
-  "Mountains & Hills [DC 15]": 15,
-  "Forest & Jungle [DC 10]": 10,
-  "Desert [DC 20]": 20,
-  "Dungeon & Underdark [DC 20]": 20,
-  "City [DC 15]": 15,
-  "Artic [DC 20]": 20,
-  "Swamp [DC 15]": 15,
-  "Grassland [DC 10]": 10,
-  "Coast [DC 10]": 10
+  "Mountains & Hills [DC 15]": {dc: 15, food: ["Berries", "Fish", "Flowers", "Fruit", "Fungi", "Insects", "Meet", "Nuts", "Plants", "Seeds", "Roots", "Weeds"]},
+  "Forest & Jungle [DC 10]": {dc: 10, food: ["Berries", "Fish", "Flowers", "Fruit", "Fungi", "Insects", "Meet", "Nuts", "Plants", "Roots", "Seeds", "Vegetables"]},
+  "Desert [DC 20]": {dc: 20, food: ["Insects", "Meet", "Seeds", "Roots", "Weeds"]},
+  "Dungeon & Underdark [DC 20]": {dc: 20, food: ["Berries", "Fish", "Flowers", "Fruit", "Fungi", "Meet", "Seeds", "Roots", "Weeds"]},
+  "City [DC 15]": {dc: 15, food: ["Flowers", "Insects", "Meet", "Seeds", "Roots", "Rubbish", "Weeds"], note: "Note: the meet probably be bird, cat, dog, or rat"},
+  "Artic [DC 20]": {dc: 20, food: ["Fish", "Meet", "Seeds", "Roots", "Weeds"]},
+  "Swamp [DC 15]": {dc: 15, food: ["Berries", "Fish", "Flowers", "Fungi", "Insects", "Meet", "Seeds", "Roots", "Weeds"]},
+  "Grassland [DC 10]": {dc: 10, food: ["Berries", "Flowers", "Fruit", "Insects", "Meet", "Seeds", "Roots", "Vegetables", "Weeds"]},
+  "Coast [DC 10]": {dc: 10, food: ["Fish", "Fruit", "Mollusks", "Roots", "Seaweed", "Weeds"]}
 };
 
-const dialogOptions = Object.entries(regions).reduce((acc, [type, value]) => acc += `<option value="${value}">${type}</option>`, ``);
+const dialogOptions = Object.entries(regions).reduce((acc, [type, {dc}]) => acc += `<option value="${type}">${type}</option>`, ``);
 
 const title = 'Foraging';
 const buttons = ["Advantage", "Normal", "Disadvantage"].map((i) => ({ label: i, callback: () => {
@@ -86,13 +86,25 @@ const survivalRoll = await new Roll(`${diceFormula}${dialog.rollType === 'Advant
 let msg = await survivalRoll.toMessage({ flavor: `Survival skill check (the task takes 4h of effort)` });
 await game.dice3d?.waitFor3DAnimationByMessageID(msg.id);
 
-if (survivalRoll.total < dialog.region) {
+if (survivalRoll.total < regions[dialog.region].dc) {
   await ChatMessage.create({content: `You don't get food or water`});
 } else {
-  const foodRoll = await new Roll(`(${foodBonus})`).evaluate();
-  msg = await foodRoll.toMessage({ flavor: `You get in pounds of food` });
-  await game.dice3d?.waitFor3DAnimationByMessageID(msg.id);
   const waterRoll = await new Roll(`(${waterBonus})`).evaluate();
   msg = await waterRoll.toMessage({ flavor: `You get in gallons of water` });
   await game.dice3d?.waitFor3DAnimationByMessageID(msg.id);
+
+  const foodRoll = await new Roll(`(${foodBonus})`).evaluate();
+  msg = await foodRoll.toMessage({ flavor: `You get in pounds of food` });
+  await game.dice3d?.waitFor3DAnimationByMessageID(msg.id);
+
+  const foodTypes = {};
+  for (let i = 0; i < foodRoll.total; i++) {
+    const foodType = regions[dialog.region].food[Math.floor(Math.random() * regions[dialog.region].food.length)];
+    foodTypes[foodType] = (foodTypes[foodType] || 0) + 1;
+  }
+  const foodMessage = Object.entries(foodTypes).map(([type, count]) => `${count > 1 ? count + 'x ' : ''}${type}`).join(', ');
+  await ChatMessage.create({content: `You gathered the following types of food: ${foodMessage}`});
+  if (dialog.region === "City [DC 15]") {
+    await ChatMessage.create({content: `<span style="color:red">Note:</span> the meet probably be bird, cat, dog, or rat`});
+  }
 }
