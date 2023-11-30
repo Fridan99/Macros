@@ -11,7 +11,7 @@ const regions = {
   "Forest & Jungle [DC 10]": {dc: 10, food: ["Berries", "Fish", "Flowers", "Fruit", "Fungi", "Insects", "Meat", "Nuts", "Plants", "Roots", "Seeds", "Vegetables"]},
   "Desert [DC 20]": {dc: 20, food: ["Insects", "Meat", "Seeds", "Roots", "Weeds"]},
   "Dungeon & Underdark [DC 20]": {dc: 20, food: ["Berries", "Fish", "Flowers", "Fruit", "Fungi", "Meat", "Seeds", "Roots", "Weeds"]},
-  "City [DC 15]": {dc: 15, food: ["Flowers", "Insects", "Meat", "Seeds", "Roots", "Rubbish", "Weeds"], note: "Note: the meat probably be bird, cat, dog, or rat"},
+  "City [DC 15]": {dc: 15, food: ["Flowers", "Insects", "Meat", "Seeds", "Roots", "Rubbish", "Weeds"], note: "Note: The Meat is probably bird, cat, dog, or rat"},
   "Artic [DC 20]": {dc: 20, food: ["Fish", "Meat", "Seeds", "Roots", "Weeds"]},
   "Swamp [DC 15]": {dc: 15, food: ["Berries", "Fish", "Flowers", "Fungi", "Insects", "Meat", "Seeds", "Roots", "Weeds"]},
   "Grassland [DC 10]": {dc: 10, food: ["Berries", "Flowers", "Fruit", "Insects", "Meat", "Seeds", "Roots", "Vegetables", "Weeds"]},
@@ -65,6 +65,6 @@ if (survivalRoll.total < regions[dialog.region].dc) {
   const foodMessage = Object.entries(foodResult).sort().map(([type, count]) => `${count}x ${type}`).join(', ');
   await ChatMessage.create({content: `<b>You found the following types of food</b>: ${foodMessage}`});
 if (dialog.region === "City [DC 15]") {
-    await ChatMessage.create({content: `<span style="color:red">Note:</span> the meat probably be bird, cat, dog, or rat`});
+    await ChatMessage.create({content: `<span style="color:red">Note:</span> The Meat is probably bird, cat, dog, or rat`});
   }
 }
