@@ -1,4 +1,5 @@
-/* Creator: thatlonelybugbear
+/* Version: 1.0.0
+ * Creator: thatlonelybugbear
  * Colaborators: Fridan99
  * Need the Item Macro module
  * Create a item, go to details, set utility in the "Action Type", set default in the "Ability Modifier", On use macro: ItemMacro (After Active Effects)
@@ -102,7 +103,10 @@ if (survivalRoll.total < regions[dialog.region].dc) {
     const foodType = regions[dialog.region].food[Math.floor(Math.random() * regions[dialog.region].food.length)];
     foodTypes[foodType] = (foodTypes[foodType] || 0) + 1;
   }
-  const foodMessage = Object.entries(foodTypes).map(([type, count]) => `${count > 1 ? count + 'x ' : ''}${type}`).join(', ');
+const foodMessage = Object.entries(foodTypes)
+  .sort(([typeA], [typeB]) => typeA.localeCompare(typeB))
+  .map(([type, count]) => `${count > 1 ? count + 'x ' : ''}${type}`)
+  .join(', ');
   await ChatMessage.create({content: `You gathered the following types of food: ${foodMessage}`});
   if (dialog.region === "City [DC 15]") {
     await ChatMessage.create({content: `<span style="color:red">Note:</span> the meet probably be bird, cat, dog, or rat`});
