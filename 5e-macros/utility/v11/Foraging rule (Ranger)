@@ -46,7 +46,7 @@ const rangerOptions = {
   "No": 0,
   "Yes": 1,
   "Yes, but I am also proficient in Survival": 2,
-  "Yes, but I already apply x2 proficiency in survival": 3
+  "Yes, but I already apply x2 proficiency in Survival": 3
 };
 
 const rangerDialogOptions = Object.entries(rangerOptions).reduce((acc, [type, value]) => acc += `<option value="${value}">${type}</option>`, ``);
