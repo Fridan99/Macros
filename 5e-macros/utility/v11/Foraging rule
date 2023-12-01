@@ -1,9 +1,11 @@
 /*Version: 1.0.1
- * Creator: thatlonelybugbear
- * Colaborators: Fridan99
+ * Original code by thatlonelybugbear
+ * Optimized by Zhell
+ * Minor stylised by Fridan99
  * Need the Item Macro module
- * Create a item, go to details, set utility in the "Action Type", set default in the "Ability Modifier", On use macro: ItemMacro (After Active Effects)
+ * Create a item, go to details, set ability check in the "Action Type", set default in the "Ability Modifier", On use macro: ItemMacro (After Active Effects)
  * Go to the Item Macro tab above, and paste the code
+ * Put the item inside the character sheet, recommended to be favorite, then target a creature, and click on the item, and voliá, the macro automatically rolls the appropriate skill check based on the creature type, and gets parameter information depending on the roll.. 
  */
 
 const regions = {
