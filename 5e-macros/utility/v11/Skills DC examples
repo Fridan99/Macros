@@ -1,11 +1,11 @@
-/*Version: 1.0.0
+/*Version: 1.0.1
  * Creator: Fridan99
  * Colaborators: thatlonelybugbear, thx for the CSS part
  * Create a sript macro, then paste the code 
  * This will create a dialog window with buttons for each 5e Skills 
  * You can select a skill and see a printout to the chat 
  * Some minor things are modified, such as the actor feat that instead of advantage in Deception, gives it in Performance, following the UA of the D&D One Direct.
- * Added some imprvements when proficient, and improvement of the Medicine skill to make it more useful.
+ * Added some improvements when proficient, and improvement of the Medicine skill to make it more useful.
  */
 
 let dialogOptions = {
