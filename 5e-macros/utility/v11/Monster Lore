@@ -1,6 +1,13 @@
-// Original code by thatlonelybugbear
-// Optimized by Zhell
-// Minor stylised by Fridan99
+/*Version: 1.0.0
+ * Original code by thatlonelybugbear
+ * Optimized by Zhell
+ * Minor stylised changes by Fridan99
+ * Create a item, go to details, set ability check in the "Action Type", set default in the "Ability Modifier", On use macro: ItemMacro (After Active Effects)
+ * Go to the Item Macro tab above, and paste the code
+ * Put the item in the character sheet of the actor, recommended as a favorite, target a creature and then roll the item
+ * The macro auto roll the corresponding skill based on the creature's type, then it outputs some parameters in a table, where the gm gives information about the monster's token depending on the result of the table.
+ */
+
 if(!token) return ui.notifications.warn("You must select a token.");
 const target = game.user.targets.first()?.actor;
 if(!target) return ui.notifications.warn("You must select a target.");
