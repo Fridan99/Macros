@@ -4,6 +4,7 @@
  * Need the Item Macro module
  * Create a item, go to details, set utility in the "Action Type", set default in the "Ability Modifier", On use macro: ItemMacro (After Active Effects)
  * Go to the Item Macro tab above, and paste the code
+ * Put the item in the character sheet of the actor, recommended as a favorite, then roll the item
  */
 
 const regions = {
