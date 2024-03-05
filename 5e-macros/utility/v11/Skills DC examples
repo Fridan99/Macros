@@ -25,6 +25,30 @@ let dialogOptions = {
 
             <div class='dialog-button-row'>`,
 buttons: {
+    strength: {
+      label: "<img src='https://i.ibb.co/wZHr3kH/weight-lifting-up.png' style='width:50%; margin-bottom: -30px;'><br><br>Strength",
+      callback: () => showTable('Strength')
+    },
+    dexterity: {
+      label: "<img src='https://i.ibb.co/xGK3zj8/tightrope.png' style='width:50%; margin-bottom: -30px;'><br><br>Dexterity",
+      callback: () => showTable('Dexterity')
+    },
+    constitution: {
+      label: "<img src='https://i.ibb.co/0fqwXkB/vitruvian-man.png' style='width:50%; margin-bottom: -30px;'><br><br>Constitution",
+      callback: () => showTable('Constitution')
+    },      
+    intelligence: {
+      label: "<img src='https://i.ibb.co/4F9VZMh/brain.png' style='width:50%; margin-bottom: -30px;'><br><br>Intelligence",
+      callback: () => showTable('Intelligence')
+    },     
+    wisdom: {
+      label: "<img src='https://i.ibb.co/r5gbrrm/wisdom.png' style='width:50%; margin-bottom: -30px;'><br><br>Wisdom",
+      callback: () => showTable('Wisdom')
+    },
+    charisma: {
+      label: "<img src='https://i.ibb.co/QJq6VnR/smitten.png' style='width:50%; margin-bottom: -30px;'><br><br>Charisma",
+      callback: () => showTable('Charisma')
+    },
     acrobatics: {
       label: "<img src='https://i.ibb.co/XCYfGSK/acrobatic.png' style='width:50%; margin-bottom: -30px;'><br><br>Acrobatics",
       callback: () => showTable('Acrobatics')
@@ -106,7 +130,117 @@ new Dialog(dialogOptions).render(true,{width:'740',id:'skillsDialog'});
 
 function showTable(skill) {
   let content = '';
-  if (skill === 'Acrobatics') {
+if (skill === 'Strength') {
+    content = `
+    <table>
+      <caption><strong><small>STRENGTH</small></strong></caption>
+      <tr><td style="padding-right: 50px;"><strong><small>Strength check</small></strong></td><td style="text-align: center; min-width:20px;"><strong>DC</strong></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Hang on to a wagon while being dragged behind it</small></td><td style="text-align: center;"><small>10</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Keep a boulder from rolling</small></td><td style="text-align: center;"><small>10</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Tip over a statue</small></td><td style="text-align: center;"><small>13</small></td></tr>
+      <tr><td colspan="2"><hr></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Break down a poor condition door</small></td><td style="text-align: center;"><small>8</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Break down a normal wooden door</small></td><td style="text-align: center;"><small>14</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Break down a normal barred wooden door</small></td><td style="text-align: center;"><small>16</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Break down a reinforced wooden door</small></td><td style="text-align: center;"><small>24</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Break down a reinforced barred wooden door</small></td><td style="text-align: center;"><small>26</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Break down iron door</small></td><td style="text-align: center;"><small>28</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Break down adamantine door</small></td><td style="text-align: center;"><small>30</small></td></tr>
+      <tr><td colspan="2"><hr></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Break through a thin wooden wall</small></td><td style="text-align: center;"><small>26</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Break through a thin masonry wall</small></td><td style="text-align: center;"><small>28</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Break through a thin hewn stone wall</small></td><td style="text-align: center;"><small>30</small></td></tr>
+      <tr><td colspan="2"><hr></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Burst rope bonds well secured</small></td><td style="text-align: center;"><small>23</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Burst iron chains</small></td><td style="text-align: center;"><small>26</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Burst adamantine chains</small></td><td style="text-align: center;"><small>30</small></td></tr>
+      <tr><td colspan="2"><hr></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Force open wooden portcullis</small></td><td style="text-align: center;"><small>26</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Force open iron portcullis</small></td><td style="text-align: center;"><small>28</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Force open adamantine portcullis</small></td><td style="text-align: center;"><small>30</small></td></tr>
+      <tr><td colspan="2"><hr></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Smash wooden chest *</small></td><td style="text-align: center;"><small>16</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Smash iron chest *</small></td><td style="text-align: center;"><small>24</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Smash adamantine chest *</small></td><td style="text-align: center;"><small>26</small></td></tr>
+    </table>
+    <hr>
+    <p><small>● Be <span style="color:red;">aware</span> that smash a chest can damage the most fragile objects (such as potions, crystals, fine clothes, papers, art objects)... *</small></p>
+    <hr>
+    <p><small><strong>Lifting and Carrying</strong>: Your Strength score determines the amount of weight you can bear. The following terms define what you can lift or carry.</small></p>
+    <p><small>● <strong>Carrying Capacity</strong>. Your carrying capacity is your Strength score multiplied by 15. This is the weight (in pounds) that you can carry, which is high enough that most characters don’t usually have to worry about it.</small></p>
+    <p><small>● <strong>Push, Drag, or Lift</strong>. You can push, drag, or lift a weight in pounds up to twice your carrying capacity (or 30 times your Strength score). While pushing or dragging weight in excess of your carrying capacity, your speed drops to 5 feet.</small></p>
+    <p><small>● <strong>Size and Strength</strong>. Larger creatures can bear more weight, whereas Tiny creatures can carry less. For each size category above Medium, double the creature’s carrying capacity and the amount it can push, drag, or lift. For a Tiny creature, halve these weights.</small></p>
+    `;
+  } else if (skill === 'Dexterity') {
+    content = `
+    <table>
+      <caption><strong><small>DEXTERITY</small></strong></caption>
+      <tr><td style="width:80%"><strong><small>Dexterity check</small></strong></td><td style="padding-left:25px;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width:80%"><small>Securely tie up a prisoner</small></td><td style="padding-left:25px;"><small>10</small></td></tr>
+      <tr><td style="width:80%"><small>Steer a chariot around a tight turn</small></td><td style="padding-left:25px;"><small>11</small></td></tr>
+      <tr><td style="width:80%"><small>Control a heavily laden cart on a steep descent</small></td><td style="padding-left:25px;"><small>12</small></td></tr>
+      <tr><td style="width:80%"><small>Wriggle free of rope bonds well secured</small></td><td style="padding-left:25px;"><small>21</small></td></tr>
+      <tr><td style="width:80%"><small>Wriggle free of chain bonds</small></td><td style="padding-left:25px;"><small>24</small></td></tr>
+      <tr><td style="width:80%"><small>Wriggle free of adamantine bonds</small></td><td style="padding-left:25px;"><small>28</small></td></tr>
+      <tr><td colspan="2"><hr></td></tr>
+      <tr><td style="width:80%"><small>Pick a unsafe lock *</small></td><td style="padding-left:25px;"><small>5</small></td></tr>
+      <tr><td style="width:80%"><small>Pick a low quality lock *</small></td><td style="padding-left:25px;"><small>10</small></td></tr>
+      <tr><td style="width:80%"><small>Pick a standard lock *</small></td><td style="padding-left:25px;"><small>15</small></td></tr>
+      <tr><td style="width:80%"><small>Pick a safe lock *</small></td><td style="padding-left:25px;"><small>20</small></td></tr>
+      <tr><td style="width:80%"><small>Pick a high quality lock *</small></td><td style="padding-left:25px;"><small>25</small></td></tr>
+      <tr><td colspan="2"><hr></td></tr>
+      <tr><td style="width:80%"><small>Disable a trap *</small></td><td style="padding-left:25px; width:20%;"><small>varies</small></td></tr>
+      <tr><td colspan="2"><hr></td></tr>
+      <tr><td style="width:80%"><small>Craft a small or detailed object</small></td><td style="padding-left:25px; width:20%;"><small>varies</small></td></tr>
+    </table>
+    <p><small>● Need proficiency in thieve's tools. *</small></p>
+    `;
+  } else if (skill === 'Constitution') {
+    content = `
+    <table>
+      <caption><strong><small>CONSTITUTION</small></strong></caption>
+    </table>
+    <hr>
+    <p><small>● <strong>Hold your breath</strong>: A creature can hold its breath for a number of minutes equal to <u>1 + its Constitution modifier</u>, minimum of 30 seconds.</small></p>
+    <hr>
+    <p><small>● <strong>March or labor for hours without rest</strong>: Constitution saving throw <u>DC 10 + 1 for each hour</u> past 8 hours (or gain one exhaustion level)</small></p>
+    <hr>
+    <p><small>● <strong>Go without sleep</strong>: Constitution saving throw <u>DC 10 + 5 for each 24 hour period</u> after the first 24 hours (or gain one exhaustion level)</small></p>
+    <hr>
+    <p><small>● <strong>Survive without food or water</strong>: Without food for a number of days equal to <u>3 + his or her Constitution modifier (minimum 1)</u> / drinks only half that much water must succeed on a <u>DC 15 Constitution saving throw</u></small></p>
+    <hr>
+    <p><small>● <strong>Quaff an entire stein of ale in one go (resist per drink of alcohol)</strong>. You <u>can resist 3 times your mod. Constitution (minimum 1) of alcohol drinks</u>, beyond that you limit need to make <u>Constitution saving throws</u> vs <u>DC 8 + 1 per additional drink</u> (on a fail check, the creature falls unconscious for 1d4 hours). If you pass your normal limit, you have <span style="color:red;">disadvantage</span> on <u>attacks rolls and ability checks</u> for [[/r 1d4]] hours.</small></p>
+    `;
+  } else if (skill === 'Intelligence') {
+    content = `
+    <table>
+      <caption><strong><small>INTELLIGENCE</small></strong></caption>
+      <tr><td style="width:80%"><strong><small>Intelligence check</small></strong></td><td style="padding-left:25px;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width:80%"><small>Estimate the value of a precious item *</small></td><td style="padding-left:25px;"><small>10</small></td></tr>
+      <tr><td style="width:80%"><small>Recall lore about a craft or trade</small></td><td style="padding-left:25px;"><small>10</small></td></tr>
+      <tr><td style="width:80%"><small>Communicate with a creature without using words</small></td><td style="padding-left:25px;"><small>15</small></td></tr>
+      <tr><td style="width:80%"><small>Win a game of skill</small></td><td style="padding-left:25px; white-space: nowrap;"><small>contest</small></td></tr>
+    </table>
+<p><small>● If your fail the check <u>4 or less</u>, you determine the price of that item around <u>20%</u> less of its actual value, otherwise you can’t discern the price (if you have a <strong>Merchant's Scale</strong>, gain <span style="color:red;">advantage</span> on Intelligence checks involving items that are valued by weight, including anything made of precious metals)*</small></p>
+    `;
+  } else if (skill === 'Wisdom') {
+    content = `
+    <table>
+      <caption><strong><small>WISDOM</small></strong></caption>
+      <tr><td style="width:80%"><strong><small>Wisdom check</small></strong></td><td style="padding-left:25px;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width:80%"><small>Get a gut feeling about what course of action to follow</small></td><td style="padding-left:25px;"><small>15</small></td></tr>
+      <tr><td style="width:80%"><small>Discern whether a seemingly dead or living creature is undead</small></td><td style="padding-left:25px;"><small>15</small></td></tr>
+    </table>
+    `;
+  } else if (skill === 'Charisma') {
+    content = `
+    <table>
+      <caption><strong><small>CHARISMA</small></strong></caption>
+      <tr><td style="width:80%"><strong><small>Wisdom check</small></strong></td><td style="padding-left:25px;"><strong><small>DC</small></strong></td></tr>
+      <tr><td style="width:80%"><small>Blend into a crowd to get the sense of key topics of conversation</small></td><td style="padding-left:25px;"><small>15</small></td></tr>
+    </table>
+    `;
+  } else if (skill === 'Acrobatics') {
     content = `
     <table>
       <caption><strong><small>ACROBATICS</small></strong></caption>
