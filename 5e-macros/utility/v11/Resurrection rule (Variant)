@@ -1,0 +1,84 @@
+/* Version: 1.0.0
+ * Creator: Fridan99
+ * Colaborators: Zhell (fix a Nan issue)
+ */
+let img = "https://i.ibb.co/qBJCt6y/Resurrection-img.jpg"; // replace with your image URL
+let title = `**RESSURRECTION RULES**`;
+let text = `<p>Several spells have the power to restore slain characters to life. When a living creature dies, its soul departs its body, leaves the Material Plane, travels through the Astral Plane, and goes to abide on the plane where the creature’s deity resides. If the creature did not worship a deity, its soul departs to the plane corresponding to its alignment. Bringing someone back from the dead means retrieving his or her soul and returning it to his or her body.</p>
+
+<p><b>Constitution Loss</b>: The passage from life to death and back again is a wrenching journey for a being’s soul. The creature has a chance to return to life reflected in the Resurrection table. Consequently, any creature brought back to life usually loses 1 point of Constitution. This lost Constitution point cannot be repaired by any mortal means, although it can be returned one Constitution point by a wish spell. A revived character at the time of death can regain lost points of Constitution by improving his or her Constitution score when he or she attains a level that allows an ability score increase. A failure in the d% implies that the procedure had complications failing in its execution, for which the soul is considered lost between the planes, not being able to be returned to life by any normal method.</p>
+
+<p><b>Preventing Revivification</b>: Enemies can take steps to make it more difficult for a character to be returned from the dead. Keeping the body prevents others from using reivify, raise dead or resurrection to restore the slain character to life. Revivification against One’s Will: A soul cannot be returned to life if it does not wish to be. A soul knows the name, alignment, and patron deity (if any) of the character attempting to revive it and may refuse to return on that basis.</p>
+
+<p><b>True resurrection spell</b>: If a creature is resurrected by this spell, then the rule of Constitution Loss is not applied, as well as the Ressurection table. This spell cannot bring to life a lost soul until it is found by a wish spell or other circumstance.</p>
+
+<table style="width:100%; text-align:center; margin-top:10px;">
+  <tr>
+    <th>Constitution Score</th>
+    <th>% Resurrection</th>
+  </tr>
+  <tr>
+    <td>2-5</td>
+    <td>65%</td>
+  </tr>
+  <tr>
+    <td>6-9</td>
+    <td>78%</td>
+  </tr>
+  <tr>
+    <td>10-13</td>
+    <td>87%</td>
+  </tr>
+  <tr>
+    <td>14-17</td>
+    <td>94%</td>
+  </tr>
+  <tr>
+    <td>18+</td>
+    <td>98%</td>
+  </tr>
+</table>`;
+
+let rollButton = `<button style="margin-top:10px;" type="button" id="resurrectionRollButton">Resurrection roll</button>`;
+
+let chatData = {
+  content: `<div style="text-align:center;"><img src="${img}" style="width:100%; height:auto;"/></div><h2>${title}</h2><p>${text}</p>${rollButton}`,
+};
+
+ChatMessage.create(chatData);
+
+Hooks.once("renderChatMessage", (chatItem, html) => {
+  html.find("#resurrectionRollButton").click(async () => {
+    let roll = await new Roll('1d100').evaluate();
+    await roll.toMessage();
+    let rollResult = roll.total;
+    let selectedToken = canvas.tokens.controlled[0];
+    let constitutionScore = selectedToken.actor.system.abilities.con.value;
+
+    let resurrectionChance;
+    if (constitutionScore >= 18) {
+      resurrectionChance = 98;
+    } else if (constitutionScore >= 14) {
+      resurrectionChance = 94;
+    } else if (constitutionScore >= 10) {
+      resurrectionChance = 87;
+    } else if (constitutionScore >= 6) {
+      resurrectionChance = 78;
+    } else {
+      resurrectionChance = 65;
+    }
+
+    let success = rollResult <= resurrectionChance;
+    let successMessage = `Resurrection roll result: ${rollResult}. The character's Constitution score is ${constitutionScore}, giving a resurrection chance of ${resurrectionChance}%. The resurrection attempt was <b style="color:green;">successful</b>.`;
+    let failureMessage = `Resurrection roll result: ${rollResult}. The character's Constitution score is ${constitutionScore}, giving a resurrection chance of ${resurrectionChance}%. The resurrection attempt was <b style="color:red;">unsuccessful</b>.`;
+
+    let message = success ? successMessage : failureMessage;
+
+    let chatData = {
+      user: game.user._id,
+      speaker: ChatMessage.getSpeaker({actor: selectedToken.actor}),
+      content: message
+    };
+    ChatMessage.create(chatData);
+  });
+});
