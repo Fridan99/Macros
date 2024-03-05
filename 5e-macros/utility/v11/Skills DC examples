@@ -159,9 +159,9 @@ if (skill === 'Strength') {
       <tr><td style="padding-right: 50px;"><small>Force open iron portcullis</small></td><td style="text-align: center;"><small>28</small></td></tr>
       <tr><td style="padding-right: 50px;"><small>Force open adamantine portcullis</small></td><td style="text-align: center;"><small>30</small></td></tr>
       <tr><td colspan="2"><hr></td></tr>
-      <tr><td style="padding-right: 50px;"><small>Smash wooden chest *</small></td><td style="text-align: center;"><small>16</small></td></tr>
-      <tr><td style="padding-right: 50px;"><small>Smash iron chest *</small></td><td style="text-align: center;"><small>24</small></td></tr>
-      <tr><td style="padding-right: 50px;"><small>Smash adamantine chest *</small></td><td style="text-align: center;"><small>26</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Smash wooden chest *</small></td><td style="text-align: center;"><small>18</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Smash iron chest *</small></td><td style="text-align: center;"><small>26</small></td></tr>
+      <tr><td style="padding-right: 50px;"><small>Smash adamantine chest *</small></td><td style="text-align: center;"><small>28</small></td></tr>
     </table>
     <hr>
     <p><small>● Be <span style="color:red;">aware</span> that smash a chest can damage the most fragile objects (such as potions, crystals, fine clothes, papers, art objects)... *</small></p>
