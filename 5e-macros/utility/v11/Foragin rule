@@ -613,5 +613,3 @@ if (actor.items.find((i) => i.name === "Waterskin")) {
 } else {
   await actor.createEmbeddedDocuments("Item", [newWaterskins]);
 }
-message.txt
-15 KB
