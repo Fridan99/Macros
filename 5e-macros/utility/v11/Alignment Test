@@ -610,7 +610,7 @@ const questions = [
       { label: "A", text: "Yes, and I’ll buy as much as I can", category: "E", points: 2 },
       { label: "B", text: "Yes, but I’ll only cheat the rich merchants", category: "E", points: 1 },
       { label: "C", text: "No, it’s too risky", category: "N", points: 1 },
-      { label: "D", text: "No, those merchants have families to fee", category: "N", points: 2 },
+      { label: "D", text: "No, those merchants be families to feed", category: "N", points: 2 },
     ],
   },
 {
