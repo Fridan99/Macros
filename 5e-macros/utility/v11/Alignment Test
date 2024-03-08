@@ -1,0 +1,884 @@
+/*Version: 1.0.0
+ * Creator: Fridan99
+ * Create a sript macro, then paste the code 
+ * This will create a dialog window with several questions
+ * Alignment Test Macro (Dialog-Style Prompt with Titles)
+ * Ask a series of random questions with multiple-choice options (A, B, C, D). Total questions = 72
+ * Each lettler of the Axis (L, X, C, G, N, and E) has 48 points, therefore it is balanced. 
+ * Allow your player to run the macro
+ * The final result will be posted in the chat, with the total scores on each axis (L, X, C, G, N, and E)
+ * Have fun and be honest in answering the questions about how your character wants to behave, but don't worry, only you and the GM will be able to see the final result.
+ */
+
+// Define your questions and options
+const questions = [
+ {
+    title: "Relationship with family",
+    question: "Family elders are expressing disapproval of you to the rest of the family. Do you:",
+    options: [
+      { label: "A", text: "Accept the criticism and change your ways", category: "C", points: 2 },
+      { label: "B", text: "Seek a compromise with the elders", category: "C", points: 1 },
+      { label: "C", text: "Besmirch the reputation of the elders as you ignore their scorn", category: "E", points: 1 },
+      { label: "D", text: "Silence the elders any way you can", category: "E", points: 2 },
+    ],
+  },
+{   
+    title: "Relationship with family",
+    question: "You inherit a family heirloom rumored to have magical powers. What do you do?",
+    options: [
+    { "label": "A", "text": "Use the heirloom to create chaos and change", "category": "C", "points": 2 },
+    { "label": "B", "text": "Sell the heirloom for personal gain", "category": "C", "points": 1 },
+    { "label": "C", "text": "Store the heirloom safely, it is not your concern to use it, though neither is it your concern to allow others to use it", "category": "X", "points": 1 },
+    { "label": "D", "text": "Ignore the heirloom, it's just an old relic", "category": "X", "points": 2 },
+    ],
+  },
+{ 
+    title: "Relationship with family",
+    question: "Would you give up a promising career to aid the family in time of need?",
+    options: [
+      { label: "A", text: "In a heartbeat", category: "G", points: 2 },
+      { label: "B", text: "Yes, with some reluctance", category: "G", points: 1 },
+      { label: "C", text: "Only if I was certain I’d be able to return to my career soon", category: "N", points: 1 },
+      { label: "D", text: "No", category: "N", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with family",
+    question: "Would you betray a family member to advance your own career?",
+    options: [
+      { label: "A", text: "Yes, without a twinge of guilt", category: "E", points: 2 },
+      { label: "B", text: "Yes, if I could do it secretly", category: "E", points: 1 },
+      { label: "C", text: "I’d resist the temptation", category: "N", points: 1 },
+      { label: "D", text: "I find the very idea abhorrent", category: "N", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with family",
+    question: "Do you respect the leaders of your family?",
+    options: [
+      { label: "A", text: "Their words guide my actions", category: "L", points: 2 },
+      { label: "B", text: "They’re role models for me", category: "L", points: 1 },
+      { label: "C", text: "They’re often out of touch with my life", category: "C", points: 1 },
+      { label: "D", text: "They’re out of touch with reality", category: "C", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with family",
+    question: "If your family had arranged your marriage to someone loathsome, would you:",
+    options: [
+      { label: "A", text: "Go through with it, proud to serve your family", category: "L", points: 2 },
+      { label: "B", text: "Agree, hiding your reluctance", category: "L", points: 1 },
+      { label: "C", text: "Subtly work against the union", category: "X", points: 1 },
+      { label: "D", text: "Flee", category: "X", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with family",
+    question: "Your family has a longstanding duty to serve the king, but you don't agree with the king's rule. What do you do?",
+    options: [
+    { "label": "A", "text": "Fulfill your family duty and serve the king", "category": "L", "points": 2 },
+    { "label": "B", "text": "Try to change the system from within", "category": "L", "points": 1 },
+    { "label": "C", "text": "Abandon your duty in the best way, trying to avoid problems with the king and your family", "category": "X", "points": 1 },
+    { "label": "D", "text": "Stay indifferent, it's not your concern regardless of the consequences", "category": "X", "points": 2 },
+    ],
+  },
+{
+    title: "Relationship with family",
+    question: "You’re estranged from a family member. On his deathbed, he seeks a reconciliation. Do you:",
+    options: [
+      { label: "A", text: "Speak to him, but hold your ground", category: "C", points: 2 },
+      { label: "B", text: "Refuse to speak to him", category: "C", points: 1 },
+      { label: "C", text: "Discuss your estrangement openly and without rancor", category: "X", points: 1 },
+      { label: "D", text: "Actively seek reconciliation, and heed his dying words", category: "X", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with friends",
+    question: "A powerful but corrupt judge offers you wealth if you’ll testify against a friend. Do you:",
+    options: [
+      { label: "A", text: "Condemn your friend and take the money", category: "E", points: 2 },
+      { label: "B", text: "Take the money and testify but try to keep your testimony ineffective", category: "E", points: 1 },
+      { label: "C", text: "Refuse the offer and refuse to testify", category: "G", points: 1 },
+      { label: "D", text: "Testify on your friend’s behalf, no matter the consequences", category: "G", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with friends",
+    question: "Do you become close to friends, or hold most people at a safe distance?",
+    options: [
+      { label: "A", text: "I have an abundance of close friends", category: "G", points: 2 },
+      { label: "B", text: "I have some close friends", category: "G", points: 1 },
+      { label: "C", text: "I have few close friends", category: "N", points: 1 },
+      { label: "D", text: "I try to keep people at a distance", category: "N", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with friends",
+    question: "Have you ever betrayed a friend?",
+    options: [
+      { label: "A", text: "I’ve done so more than once, and I sometimes get away with it", category: "E", points: 2 },
+      { label: "B", text: "I’ve done so once", category: "E", points: 1 },
+      { label: "C", text: "I’ve been tempted to do so, but I’ve never gone through with it", category: "N", points: 1 },
+      { label: "D", text: "I'd never contemplate such a thing", category: "N", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with friends",
+    question: "Your friend is in danger but helping them would break the law. What do you do?",
+    options: [
+    { "label": "A", "text": "Follow the law, even if it means not helping your friend", "category": "L", "points": 2 },
+    { "label": "B", "text": "Find a lawful way to help your friend, without breaking the law too much", "category": "L", "points": 1 },
+    { "label": "C", "text": "Break the law to save your friend, regardless of the consequences", "category": "C", "points": 1 },
+    { "label": "D", "text": "Break the law, save your friend, and use the situation to create chaos to try to avoid the consequences, even if that creates other problems for others", "category": "C", "points": 2 },
+    ],
+  },
+{
+    title: "Relationship with friends",
+    question: "How do you view lifelong commitment to a single romantic partner?",
+    options: [
+      { label: "A", text: "I’m waiting to find such a romance", category: "L", points: 2 },
+      { label: "B", text: "Such a romance would be ideal—if it’s achievable", category: "L", points: 1 },
+      { label: "C", text: "I worry I’d miss out on what others have to offer", category: "C", points: 1 },
+      { label: "D", text: "Tie yourself to one person? Huge mistake", category: "C", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with friends",
+    question: "You find out that a friend has stolen something valuable. What do you do?",
+    options: [
+    { "label": "A", "text": "Convince him to return the item, it's the right thing to do", "category": "N", "points": 2 },
+    { "label": "B", "text": "Do nothing, it's not your problem", "category": "N", "points": 1 },
+    { "label": "C", "text": "Blackmail him for your own gain", "category": "E", "points": 1 },
+    { "label": "D", "text": "Use the information to turn others against them", "category": "E", "points": 2 },
+    ],
+  },
+{
+    title: "Relationship with friends",
+    question: "Do you insist on repayment when lending money to friends?",
+    options: [
+      { label: "A", text: "Yes, and I write up a contract so there’s no misunderstanding", category: "L", points: 2 },
+      { label: "B", text: "Yes, but I try to be flexible about the exact terms", category: "L", points: 1 },
+      { label: "C", text: "No, although it’s sure nice to be repaid", category: "X", points: 1 },
+      { label: "D", text: "No, they just owe me a favor", category: "X", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with friends",
+    question: "You and a companion are captured and separated. If you betray your companion, you go free and they suffer. If you stay silent, you both suffer. What do you do?You and a companion are captured and separated. If you betray your companion, you go free and they suffer. If you stay silent, you both suffer. What do you do?",
+    options: [
+    { "label": "A", "text": "Betray your companion to secure your own freedom", "category": "E", "points": 2 },
+    { "label": "B", "text": "Consider betraying, but ultimately decide against it", "category": "E", "points": 1 },
+    { "label": "C", "text": "Stay silent, hoping your companion does the same", "category": "N", "points": 1 },
+    { "label": "D", "text": "Stay silent, regardless of what your companion might do", "category": "N", "points": 2 },
+
+    ],
+  },
+{
+    title: "Relationship with friends",
+    question: "Are you still in touch with childhood friends?",
+    options: [
+      { label: "A", text: "Yes, we correspond regularly", category: "X", points: 2 },
+      { label: "B", text: "Yes, we try to keep in touch", category: "X", points: 1 },
+      { label: "C", text: "No, I move around too much", category: "C", points: 1 },
+      { label: "D", text: "No, I don’t have anything in common with them anymore", category: "C", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "Do you donate time and money to improve the local community?",
+    options: [
+      { label: "A", text: "Yes, the needs of the community are my top priority", category: "G", points: 2 },
+      { label: "B", text: "Yes, I donate as much as I can once my own needs are met", category: "G", points: 1 },
+      { label: "C", text: "No, I don’t have enough time or money to spare", category: "N", points: 1 },
+      { label: "D", text: "No, my local community would be a waste of time and money", category: "N", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "You've discovered a powerful artifact that could be used for good or evil. What do you do?",
+    options: [
+    { "label": "A", "text": "Use the artifact to impose your will", "category": "C", "points": 2 },
+    { "label": "B", "text": "Destroy the artifact to prevent its misuse", "category": "C", "points": 1 },
+    { "label": "C", "text": "Keep the artifact safe but don't use it", "category": "X", "points": 1 },
+    { "label": "D", "text": "Donate the artifact to a museum", "category": "X", "points": 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "Your community is threatened with invasion. Do you:",
+    options: [
+      { label: "A", text: "Help defend it to your last breath", category: "G", points: 2 },
+      { label: "B", text: "Man the barricades with the rest of the community", category: "G", points: 1 },
+      { label: "C", text: "Flee as soon as things look grim", category: "E", points: 1 },
+      { label: "D", text: "Cut a deal with the invaders to act as a spy", category: "E", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "If you were injured and required immediate assistance, would members of your home community agree to help?",
+    options: [
+      { label: "A", text: "Yes, because they know I’d do the same for them", category: "N", points: 2 },
+      { label: "B", text: "Yes, because I’m generally well liked", category: "N", points: 1 },
+      { label: "C", text: "Probably not, because I’m distrusted by the powers that be", category: "E", points: 1 },
+      { label: "D", text: "Definitely not. I’ve made some enemies here", category: "E", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "You've learned a powerful spell that can either heal or harm. What do you do?",
+    options: [
+    { "label": "A", "text": "Use the spell to heal those in need", "category": "G", "points": 2 },
+    { "label": "B", "text": "Use the spell to help your friends", "category": "G", "points": 1 },
+    { "label": "C", "text": "Use the spell for personal gain", "category": "E", "points": 1 },
+    { "label": "D", "text": "Use the spell to harm your enemies", "category": "E", "points": 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "You've landed on an uncharted island with no established rules or leader. What do you do?",
+    options: [
+    { "label": "A", "text": "Establish a set of rules for everyone to follow", "category": "L", "points": 2 },
+    { "label": "B", "text": "Leave the island and return to civilization", "category": "L", "points": 1 },
+    { "label": "C", "text": "Live freely but respect others' freedom", "category": "X", "points": 1 },
+    { "label": "D", "text": "Try to maintain peace without imposing any rules", "category": "X", "points": 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "You have the power to influence the outcome of a conflict. What do you do?",
+    options: [
+      { label: "A", text: "Influence it for your own benefit", category: "E", points: 2 },
+      { label: "B", text: "Influence it subtly to minimize damage", category: "E", points: 1 },
+      { label: "C", text: "Stay out of it, it's not your place to interfere", category: "N", points: 1 },
+      { label: "D", text: "Try to mediate and find a peaceful resolution", category: "N", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "You've discovered a forbidden knowledge that could bring chaos. What do you do?",
+    options: [
+    { "label": "A", "text": "Use the knowledge for personal gain", "category": "E", "points": 2 },
+    { "label": "B", "text": "Share the knowledge with others, to make some profit in return", "category": "E", "points": 1 },
+    { "label": "C", "text": "Keep the knowledge to yourself, maybe it's safer that way", "category": "N", "points": 1 },
+    { "label": "D", "text": "Destroy the knowledge to prevent its misuse", "category": "N", "points": 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "Do you respect the laws and authorities in the community?",
+    options: [
+      { label: "A", text: "Yes, without question", category: "L", points: 2 },
+      { label: "B", text: "Yes, they’re generally the best way to govern", category: "L", points: 1 },
+      { label: "C", text: "When it suits me—there are some laws I just don’t agree with", category: "C", points: 1 },
+      { label: "D", text: "I don’t pay attention to the authorities; they’ve got no hold on me", category: "C", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "You are in a position to enforce strict order or promote personal freedom. What do you do?",
+    options: [
+      { label: "A", text: "Enforce order, society needs structure", category: "L", points: 2 },
+      { label: "B", text: "Promote some order but allow for individual freedoms", category: "L", points: 1 },
+      { label: "C", text: "Promote freedom, even if it leads to some disorder", category: "C", points: 1 },
+      { label: "D", text: "Promote absolute freedom, regardless of the consequences", category: "C", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "You live in a society with strict rules, but you yearn for freedom. What do you do?",
+    options: [
+      { label: "A", text: "Follow the rules, it's safer that way", category: "X", points: 2 },
+      { label: "B", text: "Bend the rules when no one is watching", category: "X", points: 1 },
+      { label: "C", text: "Break the rules, you value your freedom", category: "C", points: 1 },
+      { label: "D", text: "Start a rebellion to overthrow the rules", category: "C", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "Do members of the community shun, avoid, or mock you?",
+    options: [
+      { label: "A", text: "Yes, their small minds can’t handle anyone outside the norm", category: "C", points: 2 },
+      { label: "B", text: "Some do, because I don’t always fit in", category: "C", points: 1 },
+      { label: "C", text: "No, I’m generally seen as normal", category: "X", points: 1 },
+      { label: "D", text: "No, I set the standard for what is normal in my community", category: "X", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "You are given the choice to follow a leader or go your own way. What do you do?",
+    options: [
+      { label: "A", text: "Follow the leader, they know best", category: "L", points: 2 },
+      { label: "B", text: "Follow, but voice your opinion if you disagree", category: "L", points: 1 },
+      { label: "C", text: "Go your own way, you trust your judgement", category: "X", points: 1 },
+      { label: "D", text: "Reject the leader and convince others to do the same", category: "X", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "Would you stand for office or seek to represent the interests of the community in some public manner?",
+    options: [
+      { label: "A", text: "To do so would be an honor I’d joyously accept", category: "L", points: 2 },
+      { label: "B", text: "Of course. It’s everyone’s duty to do so", category: "L", points: 1 },
+      { label: "C", text: "Only if no one else could handle the job", category: "X", points: 1 },
+      { label: "D", text: "No, I don’t want to be responsible for the community’s welfare", category: "X", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with community",
+    question: "You discover a damaging secret about your rival. What do you do?",
+    options: [
+    { "label": "A", "text": "Spread the secret to cause chaos in your rival's life", "category": "C", "points": 2 },
+    { "label": "B", "text": "Use the secret to create a small scandal", "category": "C", "points": 1 },
+    { "label": "C", "text": "Blackmail your rival for personal gain", "category": "E", "points": 1 },
+    { "label": "D", "text": "Use the secret to destroy your rival's reputation", "category": "E", "points": 2 },
+    ],
+  },
+{
+    title: "Relationship with King And Country",
+    question: "Your country is wracked with famine. Would you:",
+    options: [
+      { label: "A", text: "Share what food you had with others", category: "G", points: 2 },
+      { label: "B", text: "Eat as little as possible yourself and share the rest", category: "G", points: 1 },
+      { label: "C", text: "Steal what food you needed to survive", category: "E", points: 1 },
+      { label: "D", text: "Steal as much food as possible, then sell it back to the community at a high price", category: "E", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with King And Country",
+    question: "The king has died without an heir. The throne is unclaimed. What do you do?",
+    options: [
+    { "label": "A", "text": "Seize the throne, the kingdom needs a leader", "category": "C", "points": 2 },
+    { "label": "B", "text": "Stir up a rebellion, it's time for a new order", "category": "C", "points": 1 },
+    { "label": "C", "text": "Stay out of it, let the kingdom sort itself out", "category": "X", "points": 1 },
+    { "label": "D", "text": "Leave the kingdom, it's not your problem", "category": "X", "points": 2 },
+    ],
+  },
+{
+    title: "Relationship with King And Country",
+    question: "If offered enough money, would you slip a poison into your king’s drink?",
+    options: [
+      { label: "A", text: "Yes, and I’ve done similar things before", category: "E", points: 2 },
+      { label: "B", text: "Yes, if I thought I could get away with it", category: "E", points: 1 },
+      { label: "C", text: "No, although a vast sum of money would tempt me", category: "N", points: 1 },
+      { label: "D", text: "No, and I’d warn the king of the plot", category: "N", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with King And Country",
+    question: "A plague is sweeping across your country. Would you:",
+    options: [
+      { label: "A", text: "Undertake a dangerous mission to find a cure", category: "G", points: 2 },
+      { label: "B", text: "Heal the sick as best you can", category: "G", points: 1 },
+      { label: "C", text: "Avoid contact with the sick", category: "N", points: 1 },
+      { label: "D", text: "Flee the country", category: "N", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with King And Country",
+    question: "Do you respect the lawful authority of the rulers of the land?",
+    options: [
+      { label: "A", text: "Yes. Long live the queen!", category: "L", points: 2 },
+      { label: "B", text: "Yes, our rulers are generally fair and just", category: "L", points: 1 },
+      { label: "C", text: "No, a ruler is no better than anyone else", category: "C", points: 1 },
+      { label: "D", text: "No, rulers are invariably corrupted by power", category: "C", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with King And Country",
+    question: "The king has imposed a heavy tax that is causing hardship for the people. What do you do?",
+    options: [
+    { "label": "A", "text": "Start a rebellion to overthrow the king", "category": "C", "points": 2 },
+    { "label": "B", "text": "Evade the tax and help others do the same", "category": "C", "points": 1 },
+    { "label": "C", "text": "Pay the tax, it's not your place to question it", "category": "X", "points": 1 },
+    { "label": "D", "text": "Leave the kingdom, it's not your problem", "category": "X", "points": 2 },
+    ],
+  },
+{
+    title: "Relationship with King And Country",
+    question: "You receive an anonymous letter threatening the kingdom. What do you do?",
+    options: [
+    { "label": "A", "text": "Report it to the authorities immediately", "category": "L", "points": 2 },
+    { "label": "B", "text": "Investigate the matter yourself", "category": "L", "points": 1 },
+    { "label": "C", "text": " Keep the letter in case you need it in the future", "category": "X", "points": 1 },
+    { "label": "D", "text": "It's not your problema, burn the letter and forget about it", "category": "X", "points": 2 },
+    ],
+  },
+{
+    title: "Relationship with King And Country",
+    question: "If you were offered a reasonably lucrative deal, would you spy for a hostile foreign power?",
+    options: [
+      { label: "A", text: "Yes, because my nation could stand to be knocked down a peg", category: "C", points: 2 },
+      { label: "B", text: "Yes, because my nation’s secrets mean little to me", category: "C", points: 1 },
+      { label: "C", text: "No, because I might get caught", category: "X", points: 1 },
+      { label: "D", text: "No, because I’d never violate the trust my nation put in me", category: "X", points: 2 },
+    ],
+  },
+{
+    title: "Relationship with King And Country",
+    question: "Two factions are fighting over a piece of land. What do you do?",
+    options: [
+    { "label": "A", "text": "Help establish a fair law to resolve the dispute", "category": "L", "points": 2 },
+    { "label": "B", "text": "Mediate between the factions to find a compromise", "category": "L", "points": 1 },
+    { "label": "C", "text": "Join the faction that offers the most personal benefit", "category": "C", "points": 1 },
+    { "label": "D", "text": "Stir up more chaos to exploit the situation", "category": "C", "points": 2 },
+    ],
+  },
+{
+    title: "Relationship with King And Country",
+    question: "Do you rely on the government to enforce contracts and property rights?",
+    options: [
+      { label: "A", text: "Yes, because maintaining the rule of law is more important than any individual dispute", category: "L", points: 2 },
+      { label: "B", text: "Yes, because the courts are best equipped to handle such disputes", category: "L", points: 1 },
+      { label: "C", text: "Are you kidding me? The government can’t even pave roads", category: "X", points: 1 },
+      { label: "D", text: "Absolutely not. If I can’t defend it myself, I don’t deserve to have it", category: "X", points: 2 },
+    ],
+  },
+{
+    title: "Thoughts on Crime and Punishment",
+    question: "You find a lost pouch of several coins. What do you do?",
+    options: [
+    { "label": "A", "text": "Return the pouch to its owner or authorities, refusing any reward", "category": "G", "points": 2 },
+    { "label": "B", "text": "Donate the money to a good cause", "category": "G", "points": 1 },
+    { "label": "C", "text": "Keep the money for your daily survival", "category": "E", "points": 1 },
+    { "label": "D", "text": "Invest the money in objects, property, or anything else that will make you richer or more powerful", "category": "E", "points": 2 },
+    ],
+  },
+{
+    title: "Thoughts on Crime and Punishment",
+    question: "If imprisoned, would you injure or kill others to escape?",
+    options: [
+      { label: "A", text: "Yes. Serves ‘em right for locking me up", category: "E", points: 2 },
+      { label: "B", text: "Yes. They knew the risks when they took the job", category: "E", points: 1 },
+      { label: "C", text: "No, except for minor wounds that will heal easily", category: "N", points: 1 },
+      { label: "D", text: "No. Those guards are just doing their jobs", category: "N", points: 2 },
+    ],
+  },
+{
+    title: "Thoughts on Crime and Punishment",
+    question: "You've recovered goods stolen from a local merchant. What do you do?",
+    options: [
+    { "label": "A", "text": "Return the goods to the merchant", "category": "L", "points": 2 },
+    { "label": "B", "text": "Use the goods to find the thief", "category": "L", "points": 1 },
+    { "label": "C", "text": "Keep the goods, finders keepers", "category": "X", "points": 1 },
+    { "label": "D", "text": "Sell the goods, you don't want trouble if someone finds it on you", "category": "X", "points": 2 },
+    ],
+  },
+{
+    title: "Thoughts on Crime and Punishment",
+    question: "You have defeated your enemy in battle. They are at your mercy. What do you do?",
+    options: [
+    { "label": "A", "text": "Spare them and offer a chance for redemption", "category": "G", "points": 2 },
+    { "label": "B", "text": "Let them go, but warn them not to cross paths again", "category": "G", "points": 1 },
+    { "label": "C", "text": " Finish him off, they won't get another chance to hurt you", "category": "N", "points": 1 },
+    { "label": "D", "text": "Walk away, and leave them to their fate, it's not your place to judge", "category": "N", "points": 2 },
+    ],
+  },
+{
+    title: "Thoughts on Crime and Punishment",
+    question: "Do you accept a noble’s right to treat badly the serfs who work on his land?",
+    options: [
+      { label: "A", text: "Yes. They’re lucky they’re not slaves", category: "N", points: 2 },
+      { label: "B", text: "Yes, because sometimes only fear will motivate them", category: "N", points: 1 },
+      { label: "C", text: "No, nobles should rule as kindly as possible", category: "G", points: 1 },
+      { label: "D", text: "No one has any “right” to treat another badly. Period", category: "G", points: 2 },
+    ],
+  },
+{
+    title: "Thoughts on Crime and Punishment",
+    question: "A rogue wizard is causing trouble in town. What do you do?",
+    options: [
+    { "label": "A", "text": "Report the wizard to the local authorities", "category": "L", "points": 2 },
+    { "label": "B", "text": "Try to reason with the wizard to stop", "category": "L", "points": 1 },
+    { "label": "C", "text": "Join the wizard for some fun", "category": "C", "points": 1 },
+    { "label": "D", "text": "Use the chaos to your advantage", "category": "C", "points": 2 },
+    ],
+  },
+{
+    title: "Thoughts on Crime and Punishment",
+    question: "You have accidentally committed a crime. Do you:",
+    options: [
+      { label: "A", text: "Confess, and attempt to make restitution to the victim", category: "G", points: 2 },
+      { label: "B", text: "Confess, throwing yourself on the mercy of the court", category: "G", points: 1 },
+      { label: "C", text: "Hide your involvement, lying if you have to", category: "E", points: 1 },
+      { label: "D", text: "Try to pin the crime on another", category: "E", points: 2 },
+    ],
+  },
+{
+    title: "Thoughts on Crime and Punishment",
+    question: "If guilty, would you confess to a crime?",
+    options: [
+      { label: "A", text: "Yes, because it is my duty to do so", category: "L", points: 2 },
+      { label: "B", text: "Yes, because it might get me a lighter sentence", category: "L", points: 1 },
+      { label: "C", text: "No, I’d make the magistrates prove my guilt", category: "X", points: 1 },
+      { label: "D", text: "No, and I’d try to “prove” my innocence", category: "X", points: 2 },
+    ],
+  },
+{
+    title: "Thoughts on Crime and Punishment",
+    question: "You have captured a spy who knows critical information. What do you do?",
+    options: [
+    { "label": "A", "text": "Torture the spy to extract information", "category": "E", "points": 2 },
+    { "label": "B", "text": "Threaten the spy into revealing what they know", "category": "E", "points": 1 },
+    { "label": "C", "text": "Interrogate the spy, but do no harm", "category": "N", "points": 1 },
+    { "label": "D", "text": "Release the spy, it's not your business", "category": "N", "points": 2 },
+    ],
+  },
+{
+    title: "Thoughts on Crime and Punishment",
+    question: "Would you express a revolutionary political opinion if threatened with punishment?",
+    options: [
+      { label: "A", text: "Yes, I’d rather be punished than remain silent. Up the revolution!", category: "C", points: 2 },
+      { label: "B", text: "Yes. Somebody’s got to speak the truth", category: "C", points: 1 },
+      { label: "C", text: "No, although I might privately express my opinion to friends", category: "X", points: 1 },
+      { label: "D", text: "No, politics aren’t worth getting worked up about", category: "X", points: 2 },
+    ],
+  },
+{
+    title: "Thoughts on Crime and Punishment",
+    question: "A desperate thief steals from you to feed their starving family. What do you do?",
+    options: [
+    { "label": "A", "text": "Forgive the thief and offer more help", "category": "G", "points": 2 },
+    { "label": "B", "text": "Retrieve your belongings, but don't press charges", "category": "G", "points": 1 },
+    { "label": "C", "text": "Punish the thief to teach them a lesson", "category": "E", "points": 1 },
+    { "label": "D", "text": "Use the thief's desperation to your advantage", "category": "E", "points": 2 },
+    ],
+  },
+{
+    title: "Thoughts on Crime and Punishment",
+    question: "You've discovered a secret society that operates outside the law. What do you do?",
+    options: [
+    { "label": "A", "text": "Report the society to the authorities", "category": "L", "points": 2 },
+    { "label": "B", "text": "Infiltrate the society breaking the law as little as possible to learn more about their operations, then report it to the authorities", "category": "L", "points": 1 },
+    { "label": "C", "text": "Join the society, it sounds exciting", "category": "C", "points": 1 },
+    { "label": "D", "text": "Expose the society to the public", "category": "C", "points": 2 },
+    ],
+  },
+{
+    title: "Thoughts on Crime and Punishment",
+    question: "While traveling, you witness an assault. You are ordered to testify, which will delay your travel significantly. Do you:",
+    options: [
+      { label: "A", text: "Slip out of town at night to avoid testifying", category: "C", points: 2 },
+      { label: "B", text: "Deny you saw anything", category: "C", points: 1 },
+      { label: "C", text: "Remain reluctantly, testify, and leave", category: "L", points: 1 },
+      { label: "D", text: "Remain until the trial’s conclusion in case further testimony is needed", category: "L", points: 2 },
+    ],
+  },
+{
+    title: "Thoughts on Business and the Economy",
+    question: "You've found a map that leads to a hidden treasure. What do you do?",
+    options: [
+    { "label": "A", "text": "Report the map to the authorities", "category": "L", "points": 2 },
+    { "label": "B", "text": "Follow the map and share the treasure equally with your team", "category": "L", "points": 1 },
+    { "label": "C", "text": "Follow the map and keep the treasure for yourself", "category": "C", "points": 1 },
+    { "label": "D", "text": "Sell the map to the highest bidder", "category": "C", "points": 2 },
+    ],
+  },
+{
+    title: "Thoughts on Business and the Economy",
+    question: "What is the best use of wealth?",
+    options: [
+      { label: "A", text: "To help the destitute and less fortunate", category: "G", points: 2 },
+      { label: "B", text: "Provide for the needs of friends and family", category: "G", points: 1 },
+      { label: "C", text: "To stay on top of the heap yourself", category: "E", points: 1 },
+      { label: "D", text: "To not only stay on top, but keep others from climbing to your level", category: "E", points: 2 },
+    ],
+  },
+{
+    title: "Thoughts on Business and the Economy",
+    question: "You've unearthed a treasure that is rumored to be cursed. What do you do?",
+    options: [
+    { "label": "A", "text": " Sell the treasure despite the curse, someone else will deal with the curse while I collect the gold from the sale", "category": "E", "points": 2 },
+    { "label": "B", "text": "Use the treasure to curse your enemies or someone you want to take revenge on", "category": "E", "points": 1 },
+    { "label": "C", "text": "Keep the treasure, but don't use it", "category": "N", "points": 1 },
+    { "label": "D", "text": "Bury the treasure, it's not worth the risk", "category": "N", "points": 2 },
+    ],
+  },
+{
+    title: "Thoughts on Business and the Economy",
+    question: "When confronted by beggars, do you:",
+    options: [
+      { label: "A", text: "Give generously", category: "G", points: 2 },
+      { label: "B", text: "Give moderately", category: "G", points: 1 },
+      { label: "C", text: "Give only what I wouldn’t miss anyway—a copper or two at most", category: "N", points: 1 },
+      { label: "D", text: "Ignore them as you walk", category: "N", points: 2 },
+    ],
+  },
+{
+    title: "Thoughts on Business and the Economy",
+    question: "By using magic, you could fool village merchants into thinking your copper pieces were made of gold. Do you?",
+    options: [
+      { label: "A", text: "Yes, and I’ll buy as much as I can", category: "E", points: 2 },
+      { label: "B", text: "Yes, but I’ll only cheat the rich merchants", category: "E", points: 1 },
+      { label: "C", text: "No, it’s too risky", category: "N", points: 1 },
+      { label: "D", text: "No, those merchants have families to fee", category: "N", points: 2 },
+    ],
+  },
+{
+    title: "Thoughts on Business and the Economy",
+    question: "A mysterious stranger offers you power in exchange for service. What do you do?",
+    options: [
+    { "label": "A", "text": "Politely decline, you don't need power", "category": "X", "points": 2 },
+    { "label": "B", "text": "Consider the offer, but remain skeptical", "category": "X", "points": 1 },
+    { "label": "C", "text": "Accept the offer, power is always useful", "category": "C", "points": 1 },
+    { "label": "D", "text": "Manipulate the stranger for more power", "category": "C", "points": 2 },
+    ],
+  },
+{
+    title: "Thoughts on Business and the Economy",
+    question: "You have two job offers. One pays more, but the other is secure and steady. Which do you choose?",
+    options: [
+      { label: "A", text: "Definitely the lucrative job; steady work sounds like drudgery", category: "X", points: 2 },
+      { label: "B", text: "Probably the lucrative job, although I’d look into the secure job", category: "X", points: 1 },
+      { label: "C", text: "The secure job, unless the other job was outrageously lucrative", category: "L", points: 1 },
+      { label: "D", text: "Definitely the secure job, because I plan for the long term", category: "L", points: 2 },
+    ],
+  },
+{
+    title: "Thoughts on Business and the Economy",
+    question: "You find a treasure chest in the middle of the forest. What do you do?",
+    options: [
+    { "label": "A", "text": "Donate the treasure to the local orphanage", "category": "G", "points": 2 },
+    { "label": "B", "text": "Use the treasure to help your friends and family", "category": "G", "points": 1 },
+    { "label": "C", "text": "Keep the treasure for yourself", "category": "N", "points": 1 },
+    { "label": "D", "text": "Leave the treasure, it doesn't belong to you", "category": "N", "points": 2 },
+    ],
+  },
+  {
+    title: "Thoughts on Business and the Economy",
+    question: "What’s the best path to wealth?",
+    options: [
+      { label: "A", text: "It’s a matter of luck and being in the right place at the right time", category: "C", points: 2 },
+      { label: "B", text: "Staying flexible so you can take advantage of good opportunities", category: "C", points: 1 },
+      { label: "C", text: "Following a long-term plan that incorporates a comfortable level of risk", category: "L", points: 1 },
+      { label: "D", text: "Hard work and perseverance", category: "L", points: 2 },
+    ],
+  },
+  {
+    title: "Thoughts on Business and the Economy",
+    question: "If you accepted a job or contract, would you try to finish the task even if it got much more dangerous?",
+    options: [
+      { label: "A", text: "Yes, my word is my bonde", category: "X", points: 2 },
+      { label: "B", text: "Yes, because it’s good to have a reputation for dependability", category: "X", points: 1 },
+      { label: "C", text: "You can bet I’d be renegotiating", category: "C", points: 1 },
+      { label: "D", text: "If it’s no longer a good deal, then the deal is off", category: "C", points: 2 },
+    ],
+  },
+  {
+    title: "To help or not to help",
+    question: "You see a stranger in trouble, who is being beaten up by Thugs. What do you do?",
+    options: [
+      { label: "A", text: "Rush to help him, it doesn't matter that you can get into trouble", category: "G", points: 2 },
+      { label: "B", text: "Offer help, in a way that does not compromise you too much", category: "G", points: 1 },
+      { label: "C", text: "Stay out of it, it's not your problem", category: "N", points: 1 },
+      { label: "D", text: "Watch what happens, it could be interesting", category: "N", points: 2 },
+    ],
+  },
+  {
+    title: "To help or not to help",
+    question: "You stumble upon a sacrificial ritual in which a group of acolytes of unknown power are about to sacrifice a stranger for power. What do you do?",
+    options: [
+    { "label": "A", "text": "Fight against the acolytes to save the victim", "category": "G", "points": 2 },
+    { "label": "B", "text": "Try to save the victim without having to take great risks.", "category": "G", "points": 1 },
+    { "label": "C", "text": "Take advantage of the situation or the distraction to see if you can make a profit", "category": "E", "points": 1 },
+    { "label": "D", "text": "Fight the acolytes and sacrifice the victim for the full power for you", "category": "E", "points": 2 },
+    ],
+  },
+  {
+    title: "To help or not to help",
+    question: "You have the ability to greatly help others, but it would come at a great personal cost. What do you do?",
+    options: [
+{ label: "A", text: "Help them, your personal cost doesn't matter", category: "G", points: 2 },
+      { label: "B", text: "Help them, but only if the cost isn't too high", category: "G", points: 1 },
+      { label: "C", text: "Ignore them, you come first", category: "E", points: 1 },
+      { label: "D", text: "Exploit the situation for personal gain", category: "E", points: 2 },
+    ],
+  },
+  {
+    title: "To help or not to help",
+    question: "You encounter a traveler who has lost their way and is in need of assistance. What do you do?",
+    options: [
+    { "label": "A", "text": "Help the traveler find their way and provide them with food and water", "category": "G", "points": 2 },
+    { "label": "B", "text": "Invite the traveler to join your journey, until he finds a nearby civilisation where he can fend for himself", "category": "G", "points": 1 },
+    { "label": "C", "text": "Ignore the traveler and continue on your way", "category": "N", "points": 1 },
+    { "label": "D", "text": "Give the traveler directions, but nothing more", "category": "N", "points": 2 },
+    ],
+  },
+  {
+    title: "To help or not to help",
+    question: "You come across a wounded animal in the forest with little chance of survival. What do you do?",
+    options: [
+    { "label": "A", "text": "Nurse the animal back to health as far as possible", "category": "G", "points": 2 },
+    { "label": "B", "text": "Find someone who can help the animal", "category": "G", "points": 1 },
+    { "label": "C", "text": "Leave the animal alone, nature will take its course", "category": "N", "points": 1 },
+    { "label": "D", "text": "Put the animal out of its misery", "category": "N", "points": 2 },
+    ],
+  },
+  {
+    title: "To help or not to help",
+    question: "You see a carriage carrying the driver, 4 women and a child out of control approaching a large construction hole inside the city. What do you do?",
+    options: [
+    { "label": "A", "text": "Launch yourself at the chariot, exposing yourself totally to stop it, no matter what the consequences", "category": "G", "points": 2 },
+    { "label": "B", "text": "Try to stop the carriage, but without exposing yourself too much", "category": "G", "points": 1 },
+    { "label": "C", "text": "Warns the driver to cut the horses' bridles and turn the wheels, even if it means running over a passer-by", "category": "N", "points": 1 },
+    { "label": "D", "text": "It's none of your business how the situation ends, I think it's time to eat. ", "category": "N", "points": 2 },
+    ],
+  },
+  {
+    title: "To help or not to help",
+    question: "A stranger has arrived in town with a problem only you can solve. What do you do?",
+    options: [
+    { "label": "A", "text": "Help the stranger according to the law", "category": "L", "points": 2 },
+    { "label": "B", "text": "Ask the local authorities for advice", "category": "L", "points": 1 },
+    { "label": "C", "text": "Help the stranger, but expect something in return", "category": "X", "points": 1 },
+    { "label": "D", "text": "Ignore the stranger, it's not your problem", "category": "X", "points": 2 },
+    ],
+  },
+
+  // Add more questions here...
+];
+
+// Initialize the question index and scores
+let currentQuestionIndex = 0;
+let scores = { G: 0, E: 0, N: 0, L: 0, C: 0, X: 0 };
+
+// Define the descriptions for the results
+const descriptions = {
+  LG: "<strong>Legal Good - The Crusader:</strong> A lawful good character is someone who believes in the inherent goodness of structure, order, and discipline. Often seen as paladins or righteous crusaders, these characters have a strict code of conduct. They believe in doing what is right and are willing to sacrifice for the greater good.",
+  LE: "<strong>Legal Evil - The Dominator:</strong> A lawful evil character believes in structure and order, but unlike their lawful good counterparts, they are willing to achieve their goals by any means necessary. A ruthless king who seeks to expand his domain while strictly controlling his subjects could be seen as a lawful evil character.",
+  LN: "<strong>Legal Neutral - The Judge:</strong> A lawful neutral character is someone who values order above all else. They believe in a system of laws and are committed to fairness and impartiality. A judge or a city guard captain can be considered a typical lawful neutral character.",
+  CG: "<strong>Chaotic Good - The free Spirit:</strong> Characters who are chaotic good prioritize individual freedom and spontaneity, but still lean towards doing what’s right. Think of them as the antiheroes who might break the law but have a good reason for it. They are the avengers and the mavericks, those who do not adhere to a strict code but still fight for justice.",
+  CE: "<strong>Chaotic Evil - The Destroyer:</strong> Chaotic evil characters are the embodiment of destruction and selfishness. They have no respect for rules or other beings and seek only to satisfy their own dark urges. Examples could be sadistic criminals or evil creatures intent on causing suffering for its own sake.",
+  CN: "<strong>Chaotic Neutral - The Wild Card:</strong> The chaotic neutral characters are all about personal freedom. They are unpredictable, value their own autonomy, and don’t lean strongly toward good or evil. They can be mercenaries or adventurers who do as they please, making them a wild card in the game.",
+  XG: "<strong>Neutral Good - The Benevolent:</strong> A neutral good character is motivated primarily by an innate sense of kindness and altruism. They don’t feel a strong need to follow a system of laws or rebel against them, they simply want to do good. For example, a neutral good character may be a healer who helps everyone, regardless of their alignment.",
+  XE: "<strong>Neutral Evil - The Selfish Opportunist:</strong> A neutral evil character is primarily concerned with their own well-being. They don’t have the rebellious spirit of a chaotic evil character or the structure of a lawful evil one. A neutral evil character is willing to betray allies if it benefits them, making them dangerous and unreliable.",
+  XN: "<strong>True Neutral - The Diplomat:</strong> True neutral characters strive to maintain balance. They don’t take sides and generally act out of rational self-interest. In a conflict between good vs evil or law vs chaos, they remain unaligned, making them unpredictable and fascinating to interact with in a game.",
+  // Add more descriptions here...
+};
+
+// Define the priority for the categories in case of a tie
+const priority = {
+  first: ['C', 'X', 'L'],
+  second: ['G', 'N', 'E'],
+};
+
+// Define the images for the results
+const images = {
+  CE: "https://i.ibb.co/DwTNd61/CE.jpg",
+  CG: "https://i.ibb.co/mzP62p8/CG.jpg",
+  CN: "https://i.ibb.co/HFDPmxj/CN.jpg",
+  LE: "https://i.ibb.co/KjHF6RZ/LE.jpg",
+  LG: "https://i.ibb.co/m4hjz6R/LG.jpg",
+  LN: "https://i.ibb.co/XYP4nR4/LN.jpg",
+  XE: "https://i.ibb.co/XJ96Fw8/NE.jpg",
+  XG: "https://i.ibb.co/NtVCwhc/NG.jpg",
+  XN: "https://i.ibb.co/7zQY6qG/TN.jpg",
+};
+
+// Display the introduction window
+function displayIntroduction() {
+  new Dialog({
+    title: `Alignment Test`,
+    content: `
+
+      <p><strong>The chart is structured around two axes</strong>: one that runs from good to evil and another that runs from lawful to chaotic.</p>
+      <p>– <strong>The Good-to-Evil</strong> axis deals with morality and virtue. It considers the character’s regard for life and the welfare of others, among other things. Characters on the ‘Good’ end of the axis prioritize altruism, community, and kindness, while those on the ‘Evil’ end often put self-interest above all else, even if it leads to harm or exploitation.</p>
+      <p>– <strong>The Lawful-to-Chaotic</strong> axis pertains to a character’s attitude toward society and order. Lawful characters believe in systems, whether governmental or cosmic, as tools for achieving good. Chaotic characters, on the other hand, emphasize personal freedom and are often skeptical of authority.</p>
+
+<p>–----------------------<strong>Law-Chaos Axis (L, X, C)</strong>–----------------------</p>
+<p><strong>Lawful (L):</strong> Characters that are lawful respect authority, honor tradition, and believe in a system where rules govern behavior. They are reliable and trustworthy but can be inflexible and judgmental.</p>
+<p><strong>Neutral (X):</strong> Neutral characters on this axis do not feel compelled to follow every rule and societal belief, nor do they feel the need to disrupt and rebel against everything.</p>
+<p><strong>Chaotic (C):</strong> Chaotic characters favor new ideas over tradition, resent being told what to do, and follow their consciences. They value freedom, adaptability, and flexibility but can be reckless and irresponsible.</p>
+
+<p>–----------------------<strong>Good-Evil Axis (G, N, E)</strong>–----------------------</p>
+<p><strong>Good (G):</strong> Good characters protect innocent life, make personal sacrifices to help others, and show respect for the dignity of sentient beings.</p>
+<p><strong>Neutral (N):</strong> Neutral characters on this axis have compunctions against killing the innocent but lack the commitment to make sacrifices to protect or help others.</p>
+<p><strong>Evil (E):</strong> Evil characters may hurt, oppress, and kill others. They may lack compassion for others and kill without qualms if doing so is convenient.</p>
+
+<br>
+
+    `,
+    buttons: {
+      start: {
+        label: `Test`,
+        callback: () => {
+          // Start the alignment test
+          displayNextQuestion();
+        },
+      },
+    },
+    default: "start",
+  }).render(true);
+}
+
+// Display the next question in a dialog-style prompt
+function displayNextQuestion() {
+  if (currentQuestionIndex >= questions.length) {
+    // All questions answered
+    console.log("Alignment test completed!");
+
+    // Calculate the result
+    let firstCategory = priority.first.sort((a, b) => scores[b] - scores[a] || priority.first.indexOf(a) - priority.first.indexOf(b))[0];
+    let secondCategory = priority.second.sort((a, b) => scores[b] - scores[a] || priority.second.indexOf(a) - priority.second.indexOf(b))[0];
+    let result = firstCategory + secondCategory;
+
+    // Create a table of the scores with a black line separating the first and second groups
+    let scoreTable = "<table>";
+    for (let category of ['L', 'C', 'X', 'G', 'N', 'E']) {
+      scoreTable += `<tr><td><strong>${category}</strong></td><td>${scores[category]}</td></tr>`;
+      if (category === 'X') {
+        scoreTable += `<tr><td colspan="2" style="border-top:1px solid black;"></td></tr>`;
+      }
+    }
+    scoreTable += "</table>";
+
+    // Send the result, the image, and the score table to the chat
+    let content = `<p>Your final alignment is: <strong>${result}</strong></p><p>${descriptions[result]}</p><img src="${images[result]}" style="display: block; margin: auto;"><p>Here are your scores:</p>${scoreTable}`;
+    let whisper = [game.user._id, game.users.find((u) => u.isGM)._id];
+    ChatMessage.create({ content, whisper });
+    return;
+  }
+
+  const currentQuestion = questions[currentQuestionIndex];
+  const remainingQuestions = questions.length - currentQuestionIndex - 1;
+
+  const buttons = currentQuestion.options.map((option, index) => {
+    return {
+      label: `Option ${option.label}`,
+      callback: () => {
+        // Process the selected option
+        // Add the points to the corresponding categories
+        if (Array.isArray(option.category) && Array.isArray(option.points)) {
+          for (let i = 0; i < option.category.length; i++) {
+            scores[option.category[i]] += option.points[i];
+          }
+        } else {
+          scores[option.category] += option.points;
+        }
+
+        // Move to the next question
+        currentQuestionIndex++;
+        displayNextQuestion();
+      },
+    };
+  });
+
+  new Dialog({
+    title: `Alignment Test - ${currentQuestion.title}`,
+    content: `
+      <p><strong>${currentQuestion.question}</strong></p>
+      <p>${currentQuestion.options.map((option) => `<br><strong>${option.label}.</strong> ${option.text}`).join("<br>")}</p>
+      <br><br>
+      <p><em>Remaining questions: ${remainingQuestions}</em></p>
+    `,
+    buttons: {
+      ...buttons,
+    },
+    default: "option0",
+  }).render(true);
+}
+
+// Shuffle the array of questions
+questions.sort(() => Math.random() - 0.5);
+
+// Call displayIntroduction to start the alignment test
+displayIntroduction();
