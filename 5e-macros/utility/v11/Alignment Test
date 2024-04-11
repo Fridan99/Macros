@@ -757,8 +757,8 @@ const descriptions = {
 
 // Define the priority for the categories in case of a tie
 const priority = {
-  first: ['C', 'X', 'L'],
-  second: ['G', 'N', 'E'],
+  first: ['X', 'C', 'L'],
+  second: ['N', 'G', 'E'],
 };
 
 // Define the images for the results
