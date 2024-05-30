@@ -1,0 +1,320 @@
+/*Version: 1.0.1
+ * Creator: Fridan99
+ * Create a sript macro, then paste the code 
+ * This will create a dialog window with a box options of quality tavern, and 2 options (name generator and rumor)
+ * The rumour can only be seen by the GM, and each rumour has a different DC depending on the information the players can get. 
+ */
+let tavernRumors = [
+    "Investigation DC 8 - There's talk of a werewolf hunting in the nearby forest.",
+    "Investigation DC 8 - A local fisherman claims to have caught a talking fish.",
+    "Investigation DC 9 - A local lake is rumored to be home to a sea monster.",
+    "Investigation DC 9 - A rumour has it that there is a monster that hunts at night in the town/city.",
+    "Investigation DC 10 - A group of goblins has been spotted near the city/town.",
+    "Investigation DC 10 - A strange creature has been seen in the forest.",
+    "Investigation DC 10 - There's a thief stealing from the local market.",
+    "Investigation DC 10 - A citizen lost all his money gambling in a nearby tavern that engages in illegal gambling.",
+    "Investigation DC 10 - A mysterious figure has been seen lurking around the town at night.",
+    "Investigation DC 10 - A local library is rumored to be haunted.",
+    "Investigation DC 10 - The crypts of the city/town are haunted by the corpses of its inhabitants who do not rest.",
+    "Investigation DC 10 - A rumour has it that there is a monster that hunts at night in the town/city.",
+    "Investigation DC 11 - There's a rumor of a haunted house on the outskirts of city/town.",
+    "Investigation DC 11 - A rare celestial event is expected to occur in the next few days.",
+    "Investigation DC 11 - A strange illness is spreading through a nearby village.",
+    "Investigation DC 11 - A local artist is said to be able to paint the future.",
+    "Investigation DC 12 - A ghost has been seen in the graveyard at night.",
+    "Investigation DC 12 - A group of thieves is looking for someone to do some illegal work.",
+    "Investigation DC 12 - There's talk of a cursed tomb in the cemetery.",
+    "Investigation DC 12 - There's a rumor of a witch cursing the local crops.",
+    "Investigation DC 12 - An iron golem has escaped from a Sorcerer's workshop.",
+    "Investigation DC 12 - A fire elemental has escaped from the workshop of a Wizard.",
+    "Investigation DC 12 - A group of adventurers went into the mountains and never returned.",
+    "Investigation DC 13 - Hundreds of bats have been seen circling around a known offender, seeming to whisper to them.",
+    "Investigation DC 13 - A local child is suspected of having magical abilities.",
+    "Investigation DC 13 - A secret cult is said to be operating in the city.",
+    "Investigation DC 15 - There's a rumor of a giant living in the hills.",
+    "Investigation DC 13 - A legendary hero is rumored to be visiting the town soon.",
+    "Investigation DC 13 - A local farmer claims to have found a magic item in his field.",
+    "Investigation DC 13 - A local child claims to have seen a fairy in the woods.",
+    "Investigation DC 14 - The city magistrate is dying of an incurable disease.",
+    "Investigation DC 14 - A local merchant is rumored to be selling counterfeit goods.",
+    "Investigation DC 14 - There's a rumor of a ghost ship appearing on the full moon.",
+    "Investigation DC 14 - A local scholar is rumored to have discovered an ancient map that leads to forgotten ruins.",
+    "Investigation DC 14 - A local bakery is rumored to be a front for a smuggling operation.",
+    "Investigation DC 15 - A seer tells of a prophecy about the end of the city/town about a creature that lurks to devastate everything",
+    "Investigation DC 15 - A dragon has been spotted flying over the mountains.",
+    "Investigation DC 15 - There's a rumor of a magical sword lost in the nearby mountains.",
+    "Investigation DC 15 - There's a rumor of a witch living in the nearby forest.",
+    "Investigation DC 15 - A secret passage is said to be hidden in the town hall.",
+    "Investigation DC 15 - There's a rumor of a secret tunnel leading to the fortress/castle.",
+    "Investigation DC 16 - A local merchant is being extorted by some of the Zentharim's agents.",
+    "Investigation DC 16 - The local blacksmith is rumored to be forging a weapon of great power.",
+    "Investigation DC 16 - A statue in the city/town square is said to come alive at night.",
+    "Investigation DC 17 - A local innkeeper is suspected of being part of a thieves' guild.",
+    "Investigation DC 17 - A local hermit is rumored to be a retired dragon slayer.",
+    "Investigation DC 17 - A powerful and dangerous wizard is said to be hiding in the town from the guards.",
+    "Investigation DC 18 - There's talk of a magical spring with healing properties in the forest.",
+    "Investigation DC 18 - A powerful demon is said to be sealed in a nearby cave.",
+    "Investigation DC 18 - A local noble is suspected of being involved in dark magic.",
+    "Investigation DC 18 - There's talk of a hidden entrance to the Underdark in the sewers.",
+    "Investigation DC 19 - A local well is rumored to be a portal to another world.",
+    "Investigation DC 19 - A secret society is said to be planning a coup.",
+    "Investigation DC 25 - A local knight is rumored to be a dragon in disguise.",
+    "Investigation DC 20 - A powerful artifact has been stolen from a temple.",
+    "Investigation DC 20 - There's a secret treasure hidden in an old castle.",
+    "Investigation DC 20 - There's a rumor of a hidden dungeon under the city.",
+    "Investigation DC 20 - The mayor is suspected of being a vampire.",
+    "Investigation DC 20 - A local noble is suspected of corruption.",
+    "Investigation DC 20 - A powerful wizard is said to be seeking a rare magical item.",
+    "Investigation DC 20 - There's a rumor of a hidden library filled with ancient texts.",
+    "Investigation DC 20 - A powerful lich is said to be seeking a new apprentice.",
+    "Investigation DC 20 - A local noble is suspected of being a shape-shifter.",
+    "Investigation DC 20 - There's talk of a magical stone that grants wishes.",
+    "Investigation DC 20 - A strange light has been seen in the sky at night.",
+    "Investigation DC 15 - There's a rumor of a hidden treasure in the old mine.",
+    "Investigation DC 20 - A strange creature has been spotted in the river."
+];
+
+function getRandomRumor(tavernRumors) {
+    let rumor = tavernRumors[Math.floor(Math.random() * tavernRumors.length)];
+    return rumor;
+}
+
+let tavernNames = [
+    "The Prancing Pony",
+    "The Leaky Cauldron",
+    "The Dancing Dragon",
+    "The Silver Shield",
+    "The Laughing Goblin",
+    "The Drunken Donkey",
+    "The Lucky Leprechaun",
+    "The Singing Siren",
+    "The Whispering Willow",
+    "The Roaring Lion",
+    "The Silent Serpent",
+    "The Jolly Jester",
+    "The Rusty Anchor",
+    "The Crimson Crab",
+    "The Howling Wolf",
+    "The Gilded Rose",
+    "The Wandering Wizard",
+    "The Loyal Lancer",
+    "The Majestic Moose",
+    "The Barking Bard",
+    "The Gleaming Griffin",
+    "The Daring Dragonfly",
+    "The Frolicking Fairy",
+    "The Purring Panther",
+    "The Quizzical Quokka",
+    "The Radiant Raven",
+    "The Serene Swan",
+    "The Twinkling Triton",
+    "The Vibrant Vixen",
+    "The Golden Griffin", 
+    "The Harmonious Harpy",
+    "The Gallant Griffin",
+    "The Mystical Mermaid",
+    "The Noble Nymph",
+    "The Quirky Quetzal",
+    "The Rambunctious Roc",
+    "The Sassy Satyr",
+    "The Tranquil Treant",
+    "The Unseen Unicorn",
+    "The Vivacious Valkyrie",
+    "The Jubilant Jackalope",
+    "The Eloquent Elephant",
+    "The Bewitching Basilisk",
+    "The Enchanted Elk",
+    "The Luminous Leviathan",
+    "The Whimsical Wyvern",
+    "The Serendipitous Sphinx",
+    "The Astounding Aardvark",
+    "The Mesmerizing Manticore",
+    "The Captivating Chimera",
+    "The Dazzling Djinn",
+    "The Fabled Fenrir",
+    "The Gallant Gorgon",
+    "The Harmonious Hydra",
+    "The Illustrious Imp",
+    "The Jovial Jabberwock",
+    "The Knavish Kraken",
+    "The Lustrous Leviathan",
+    "The Majestic Minotaur",
+    "The Nurturing Nymph",
+    "The Opulent Ogre",
+    "The Prismatic Phoenix",
+    "The Quixotic Quillbeast",
+    "The Radiant Roc",
+    "The Sagacious Salamander",
+    "The Tenacious Tarrasque",
+    "The Unyielding Unicorn",
+    "The Vibrant Valkyrie",
+    "The Wistful Werewolf",
+    "The Zealous Zephyr"
+];
+
+function generateRandomName() {
+    return tavernNames[Math.floor(Math.random() * tavernNames.length)];
+}
+
+let tavernQuality = [
+    {
+        name: "Squalid", 
+        cost: "3 cp", 
+        meals: {
+            breakfast: ["gruel", "stale bread", "old moldy cheese", "moldy fruit", "cold porridge", "hard biscuit", "pickled decomposed vegetables", "day-old bread", "cured moldy cheese", "bruised apples", "stale buttered toast", "hard wheat biscuit"],
+            lunch: ["bean soup", "leftover stew", "hard cheese", "egg and green peppers", "fried bread", "spinach and pepper", "stale bread", "boiled cabbage", "herb stew", "decomposed dried fruit", "decomposed roasted vegetables", "bacon rashers"],
+            dinner: ["poached eggs", "moldy cheese", "boiled potatoes", "onion stew", "stale bread", "roasted decomposed vegetables", "rancid butter over cabbage & leeks", "smoked sausage", "pickled eggs", "salted nuts"]
+        },
+        drinks: {
+            alcoholic: ["cheap ale", "watered-down wine", "homemade mead", "fermented fruit juice", "weak beer", "sour cider", "moldy wine", "stale beer", "strong spirits", "potato vodka"],
+            nonAlcoholic: ["stagnant water", "weak tea", "cold broth", "sour fruit juice", "boiled water", "herbal infusion", "rancid milk", "honey water", "vegetable broth", "decomposed fruit infusion"]
+        }
+    },
+    {
+        name: "Poor", 
+        cost: "6 cp", 
+        meals: {
+            breakfast: ["hard bread", "dried apricots", "worldly cheese", "wilted apple", "bruised banana", "overripe pear", "millet porridge", "scrambled eggs", "grain porridge", "aged cheese", "bruised apple", "cornmeal mush", "hard biscuit", "powdered eggs", "salted bacon", "pickled radishes"],
+            lunch: ["vegetable soup", "rice porridge", "cheese with fried carrots", "bread with eggs", "boiled cabbage", "mushroom stew", "fruit", "root vegetables", "lentil stew"],
+            dinner: ["vegetables stew", "cheese", "boliled potatoes", "dried fish", "pickled vegetables", "hard bread", "vegetable salad", "rice with eggs", "sausage", "eggs with vegetables", "nuts"]
+        },
+        drinks: {
+            alcoholic: ["ale", "wine", "mead", "fruit juice", "beer", "cider", "wine", "beer", "spirits", "vodka"],
+            nonAlcoholic: ["water", "tea", "broth", "fruit juice", "water", "infusion", "milk", "honey water", "broth", "infusion"]
+        }
+    },
+    {
+        name: "Modest", 
+        cost: "3 sp", 
+        meals: {
+            breakfast: ["oatmeal with honey", "millet porridge with maple syrup", "scrambled eggs with herbs", "buttered toast", "freshly baked bread", "local cheese", "seasonal fruit", "scrambled eggs", "homemade biscuit", "rice pudding with cinnamon", "oven-fresh baguette", "local blue cheese", "fresh oranges", "scrambled eggs with spinach", "buttered croissants"],
+            lunch: ["vegetable soup", "grilled rabbit", "pickled fish", "grilled chicken", "cheese in wine sauce with walnuts", "grilled beef", "bread with fish soup", "cabbage with grilled vegetables", "meat and mushroom stew", "rabbit stew", "confit fruit", "root vegetables with chicken", "fried fish", "roast beef", "smoked fish"],
+            dinner: ["mushroom stew", "marinated cheese", "boiled potatoes with rabbit", "grilled fish", "bread with vegetables", "chicken stew", "sausage with cheese", "eggs with meat", "fried nuts with honey sauce", "pork chops with apple sauce", "chicken curry with rice", "grilled salmon with asparagus", "beef lasagna", "vegetable paella", "spaghetti with tomato sauce", "roasted root vegetables", "lentil and vegetable soup", "shrimp scampi", "spinach and cheese stuffed shells"]
+        },
+        drinks: {
+            alcoholic: ["ale", "wine", "mead", "fruit juice", "beer", "cider", "wine", "whisky", "spirits", "vodka"],
+            nonAlcoholic: ["water", "tea", "broth", "fruit juice", "water", "infusion", "milk", "honey water", "broth", "infusion"]
+        }
+    },
+    {
+        name: "Comfortable", 
+        cost: "5 sp", 
+        meals: {
+            breakfast: ["fluffy pancakes with maple syrup", "freshly baked croissants", "artisanal cheese selection", "seasonal fruit platter", "scrambled eggs with smoked salmon", "homemade granola with yogurt", "grilled sausages", "vegetable quiche", "pickled vegetables", "smoked ham", "French toast with maple syrup", "freshly baked muffins", "gourmet cheese platter", "fruit salad with honey", "eggs benedict", "homemade oatmeal with berries", "pan-fried bacon", "spinach and cheese frittata", "marinated artichokes"],
+            lunch: ["grilled chicken salad with vinaigrette", "beef stew with fresh bread", "grilled fish with lemon butter sauce", "vegetable lasagna", "pasta primavera", "baked potatoes with chives and sour cream", "dried fruit and nut mix", "roasted vegetable medley", "chicken Caesar salad", "lamb stew with fresh herbs", "grilled trout with lemon and parsley", "eggplant lasagna", "penne alla vodka", "roasted sweet potatoes with rosemary", "mixed dried fruit and nuts", "steamed broccoli and cauliflower"],
+            dinner: ["roasted duck with cherry sauce", "beef wellington with roasted potatoes", "grilled salmon with dill and capers", "lamb chops with mint jelly", "vegetable stir-fry with tofu", "spaghetti carbonara", "roasted garlic and rosemary potatoes", "clam chowder with oyster crackers", "mixed olives", "grilled asparagus", "roasted quail with cranberry sauce", "beef stroganoff with egg noodles", "grilled halibut with lemon butter sauce", "rack of lamb with garlic and herbs", "vegetable stir-fry with seitan", "fettuccine alfredo with shrimp", "roasted garlic mashed potatoes", "lobster bisque with oyster crackers", "olive tapenade", "grilled asparagus with hollandaise sauce"]
+        },
+        drinks: {
+            alcoholic: ["craft beer", "Cabernet Sauvignon", "chardonnay", "honey mead", "single malt whiskey", "premium vodka", "spiced rum", "silver tequila", "aged brandy", "dry gin"],
+            nonAlcoholic: ["spring water", "hot herbal tea", "iced green tea", "fresh lemonade", "freshly squeezed orange juice", "cloudy apple juice", "red grape juice", "tomato juice with celery", "fresh milk", "aromatic coffee"]
+        }
+    },
+    {
+        name: "Wealthy", 
+        cost: "8 sp", 
+        meals: {
+            breakfast: ["artisanal bread", "fresh fruit", "fluffy omelette", "artisanal crepes", "quiche with fruits", "truffle toast", "foie gras with artisanal bread", "waffles with fresh berries and cream", "artisanal pastries", "gourmet cheese selection", "exotic fruit platter", "eggs benedict with smoked salmon", "granola with yogurt and honey", "prime cut bacon", "quiche lorraine", "marinated artichokes", "prosciutto"],
+            lunch: ["lobster bisque", "duck confit", "beef bourguignon", "coq au vin", "truffle pasta", "escargot", "caviar with black rice", "oysters", "steak tartare", "lobster salad with vinaigrette", "beef bourguignon with fresh baguette", "grilled sea bass with lemon butter sauce", "lamb rack with tzatziki", "truffle lasagna", "pasta with caviar", "baked potatoes with truffle oil and chives", "dried fruit and nut mix with honey", "roasted vegetable medley with herbs"],
+            dinner: ["filet mignon", "lobster tail", "truffle risotto", "duck a l'orange", "caviar", "foie gras", "rack of lamb", "escargot", "oysters", "steak tartare", "roasted pheasant with cranberry sauce", "filet mignon with roasted potatoes", "grilled salmon with dill and capers", "rack of lamb with garlic and herbs", "vegetable stir-fry with tofu and truffle oil", "spaghetti carbonara with black truffle", "roasted garlic mashed potatoes with chives", "clam chowder with oyster crackers", "mixed olives with feta cheese", "grilled asparagus with hollandaise sauce"]
+        },
+        drinks: {
+            alcoholic: ["champagne", "fine wine", "aged whiskey", "cocktails", "brandy", "cognac", "port", "sherry", "martini", "gin and tonic", "craft beer", "cabernet sauvignon", "chardonnay", "honey mead", "single malt whiskey", "premium vodka", "spiced rum", "silver tequila", "aged brandy", "dry gin"],
+            nonAlcoholic: ["sparkling water", "tea", "coffee", "fruit juice", "mineral water", "iced tea", "smoothie", "milkshake", "soda", "spring water", "hot herbal tea", "iced green tea", "fresh lemonade", "freshly squeezed orange juice", "cloudy apple juice", "red grape juice", "tomato juice with celery", "fresh milk", "aromatic coffee"]
+        }
+    },
+    {
+        name: "Aristocratic", 
+        cost: "2 gp", 
+        meals: {
+            breakfast: ["gourmet pancakes with exotic fruits and cream", "artisanal pastries from renowned bakers", "fine cheese selection from across the realm", "exotic fruit platter with a honey drizzle", "eggs benedict with imported smoked salmon", "granola with yogurt and rare honey", "prime cut bacon from specially bred pigs", "quiche made with rare herbs", "marinated artichokes", "prosciutto from aged hams", "crepes with fresh berries and cream", "artisanal danishes", "fine cheese selection from various regions", "tropical fruit platter", "eggs Florentine", "homemade muesli with yogurt", "prime cut ham", "spinach and mushroom frittata", "marinated olives", "smoked trout"],
+            lunch: ["lobster salad with a rare vinaigrette", "beef bourguignon with fresh bread from the royal bakery", "grilled fish with lemon butter sauce, caught fresh from the royal waters", "lamb gyro with tzatziki made from the milk of sheep grazed on the royal pastures", "truffle lasagna, with truffles sourced from the royal forests", "pasta with caviar from the royal fisheries", "baked potatoes with truffle oil and chives, sourced from the royal gardens", "dried fruit and nut mix with honey from the royal apiaries", "roasted vegetable medley with herbs from the royal greenhouse", "crab salad with a rare vinaigrette", "venison stew with fresh bread", "grilled swordfish with lemon and capers", "duck confit with tzatziki", "truffle ravioli", "linguini with clam sauce", "roasted fingerling potatoes with rosemary", "dried fruit and nut mix with truffle honey", "steamed green beans with almonds"],
+            dinner: ["roasted pheasant with cranberry sauce, hunted from the royal forests", "filet mignon with roasted potatoes, from cattle grazed on the royal pastures", "grilled salmon with dill and capers, caught fresh from the royal waters", "rack of lamb with garlic and herbs, from sheep grazed on the royal pastures", "vegetable stir-fry with tofu and truffle oil, with vegetables sourced from the royal gardens", "spaghetti carbonara with black truffle, with truffles sourced from the royal forests", "roasted garlic mashed potatoes with chives, sourced from the royal gardens", "clam chowder with oyster crackers, with clams sourced from the royal waters", "mixed olives with feta cheese, sourced from the royal farms", "grilled asparagus with spiced honey and caviar sauce, with asparagus sourced from the royal gardens", "roasted goose with apple stuffing", "surf and turf with garlic mashed potatoes", "grilled lobster with garlic butter", "veal chops with mushroom sauce", "vegetable stir-fry with black truffle oil", "risotto with porcini mushrooms", "roasted new potatoes with thyme", "lobster bisque with creme fraiche", "antipasto platter", "grilled asparagus with bernaise sauce"]
+        },
+        drinks: {
+            alcoholic: ["craft beer brewed in the royal brewery", "pinot Noir from the royal vineyard", "cabernet sauvignon from the royal vineyard", "chardonnay from the royal vineyard", "honey mead made with honey from the royal apiaries", "single malt whiskey distilled in the royal distillery", "premium vodka distilled in the royal distillery", "spiced rum distilled in the royal distillery", "silver tequila distilled in the royal distillery", "aged brandy distilled in the royal distillery", "dry gin distilled in the royal distillery", "sauvignon Blanc from the royal vineyard"],
+            nonAlcoholic: ["spring water from the royal springs", "hot herbal tea made with herbs from the royal greenhouse", "iced green tea made with tea leaves from the royal plantation", "fresh lemonade made with lemons from the royal orchard", "freshly squeezed orange juice from the royal orchard", "cloudy apple juice made with apples from the royal orchard", "red grape juice made with grapes from the royal vineyard", "tomato juice with celery, made with tomatoes and celery from the royal greenhouse", "fresh milk from cows grazed on the royal pastures", "aromatic coffee brewed from beans grown on the royal plantation", "white grape juice made with grapes from the royal vineyard"]
+        }
+    }
+];
+
+function getRandomMeals(tavern, mealType, count) {
+    let meals = [...tavern.meals[mealType]]; // Create a copy of the meals array
+    let selectedMeals = [];
+    for(let i = 0; i < count; i++) {
+        if(meals.length === 0) {
+            break; // Break if there are no more meals to select
+        }
+        let index = Math.floor(Math.random() * meals.length);
+        let meal = meals[index];
+        selectedMeals.push(meal);
+        meals.splice(index, 1); // Remove the selected meal from the array
+    }
+    return selectedMeals;
+}
+
+function getRandomDrink(tavern, drinkType) {
+    let drinks = tavern.drinks[drinkType];
+    let drink = drinks[Math.floor(Math.random() * drinks.length)];
+    return drink;
+}
+
+function generateMenu(tavern, randomName, tavernIndex) {
+    let breakfast = getRandomMeals(tavern, "breakfast", 3);
+    let lunch = getRandomMeals(tavern, "lunch", 3);
+    let dinner = getRandomMeals(tavern, "dinner", 3);
+    let alcoholicDrink = getRandomDrink(tavern, "alcoholic");
+    let nonAlcoholicDrink = getRandomDrink(tavern, "nonAlcoholic");
+
+    let menu = {
+        tavern: tavern.name,
+        meals: {
+            breakfast: breakfast,
+            lunch: lunch,
+            dinner: dinner
+        },
+        drinks: [alcoholicDrink, nonAlcoholicDrink]
+    };
+
+    let messageContent = "";
+    if(randomName) {
+        messageContent += `<b>Tavern Name:</b> ${menu.tavern}<br>`;
+    }
+    messageContent += `<b>Tavern Quality:</b> ${tavernQuality[tavernIndex].name}<br><b>Cost:</b> ${tavern.cost}<br><br><b>Breakfast (choose 1):</b><br> - ${menu.meals.breakfast.join("<br> - ")}<br><b>Lunch (choose 1):</b><br> - ${menu.meals.lunch.join("<br> - ")}<br><b>Dinner (choose 1):</b><br> - ${menu.meals.dinner.join("<br> - ")}<br><br><b>Drinks:</b><br> - ${menu.drinks.join("<br> - ")}`;
+
+    ChatMessage.create({
+        user: game.user._id,
+        content: messageContent
+    });
+}
+let dialogContent = `<p>Select the quality of the tavern:</p><select id="tavern-quality">` + tavernQuality.map((tavern, index) => `<option value="${index}">${tavern.name}</option>`).join("") + `</select><br><div style="display: flex; align-items: center;"><input type="checkbox" id="random-name" name="random-name"><label for="random-name" style="margin-left: 5px;">Do you want a random name for the tavern?</label></div><div style="display: flex; align-items: center;"><input type="checkbox" id="random-rumor" name="random-rumor"><label for="random-rumor" style="margin-left: 5px;">Do you want to generate a rumor?</label></div>`;
+
+new Dialog({
+    title: "Tavern Quality",
+    content: dialogContent,
+    buttons: {
+        ok: {
+            label: "OK",
+            callback: (html) => {
+                let tavernIndex = html.find('#tavern-quality')[0].value;
+                let tavern = {...tavernQuality[tavernIndex]}; // Create a copy of the tavern object
+                let randomName = html.find('#random-name')[0].checked;
+                let randomRumor = html.find('#random-rumor')[0].checked;
+                if(randomName) {
+                    tavern.name = generateRandomName();
+                }
+                generateMenu(tavern, randomName, tavernIndex);
+                if(randomRumor) {
+                    let rumor = getRandomRumor(tavernRumors);
+                    ChatMessage.create({
+                        user: game.user._id,
+                        content: `<b>Rumor:</b> ${rumor}`,
+                        whisper: [game.user._id] // This will make the message only visible to the GM
+                    });
+                }
+            }
+        },
+        cancel: {
+            label: "Cancel"
+        }
+    }
+}).render(true);
