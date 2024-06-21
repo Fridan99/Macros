@@ -1,4 +1,4 @@
-/* Version: 1.0.1
+/* Version: 1.0.2
  * Creator: Fridan99
  * Colaborators: Krig (advice an away code), MikeyTheMoose [Suggestion: ui.notifications.warn() instead of console.log()], Freeze (redundancy notice for canvas.tokens.controlled[0], and item as predefined variable)
  * Need the Item Macro module or midi-qol
