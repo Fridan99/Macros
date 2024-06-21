@@ -1,4 +1,4 @@
-/* Version: 1.0.0
+/* Version: 1.0.1
  * Creator: Fridan99
  * Macro name: Beshaba and Tymora's Fate 
  * Create a script macro, copy, paste and let the party begin
@@ -48,12 +48,12 @@ if (tokenNames.length === 0) {
         ChatMessage.create({
             content: `<b>The chosen is:</b>`
         });
-    }, 1000);
+    }, 900);
 
     // Delay the display of the randomly chosen token by 3 seconds
     setTimeout(function() {
         ChatMessage.create({
             content: `${randomTokenName}`
         });
-    }, 3000);
+    }, 2100);
 }
