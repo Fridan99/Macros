@@ -1,9 +1,6 @@
-/* Version: 1.0.0
+/* Version: 1.0.1
  * Creator: Fridan99
- * Colaborators: Krig (advice an away missing), MikeyTheMoose [Suggestion: ui.notifications.warn() instead of console.log()], Freeze (redundancy notice for canvas.tokens.controlled[0])
- * Need the Item Macro module or midi-qol
- * Go to the Item Macro or DIME tab above, of the Augury spell item and paste the code,/* Version: 1.0.0
- * Creator: Fridan99
+ * Colaborators: Krig (advice an away code), MikeyTheMoose [Suggestion: ui.notifications.warn() instead of console.log()], Freeze (redundancy notice for canvas.tokens.controlled[0], and item as predefined variable)
  * Need the Item Macro module or midi-qol
  * Go to the Item Macro or DIME tab above, of the Augury spell item and paste the code, set On use Macro: After Active Effects
  * Put the item Augury in the character sheet of the actor
@@ -13,23 +10,6 @@
 let options = ["Weal, for good results", "Woe, for bad results", "Weal and woe, for both good and bad results"];
 
 async function auguryResult() {
-    if (!canvas.tokens.controlled.length) {
-        ui.notifications.warn("No controlled tokens.");
-        return;
-    }
-
-    let token = canvas.tokens.controlled[0];
-    if (!token.actor) {
-        ui.notifications.warn("Controlled token has no actor.");
-        return;
-    }
-
-    let item = token.actor.items.getName("Augury");
-    if (!item) {
-        ui.notifications.warn("Actor does not have an item named 'Augury'.");
-        return;
-    }
-
     let availableUses = item.system.uses.value;
     let maxUses = item.system.uses.max;
     let chance;
