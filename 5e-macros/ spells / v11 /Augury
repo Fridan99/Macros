@@ -1,0 +1,80 @@
+/* Version: 1.0.0
+ * Creator: Fridan99
+ * Colaborators: Krig (advice an away missing), MikeyTheMoose [Suggestion: ui.notifications.warn() instead of console.log()], Freeze (redundancy notice for canvas.tokens.controlled[0])
+ * Need the Item Macro module or midi-qol
+ * Go to the Item Macro or DIME tab above, of the Augury spell item and paste the code,/* Version: 1.0.0
+ * Creator: Fridan99
+ * Need the Item Macro module or midi-qol
+ * Go to the Item Macro or DIME tab above, of the Augury spell item and paste the code, set On use Macro: After Active Effects
+ * Put the item Augury in the character sheet of the actor
+ * In the details of the Augury spell item, put a Limited Uses like 20 of 20 per Long Rest for example, Resource Consuption: 1 Item Uses: Augury (20 per lr). 
+ * Let's run the macro. The macro auto-detects how many times the Augury spell has been used, and automatically rolls 1d100 from the 2nd use, respecting the percentage for each subsequent use to get a random answer. Both the chat text and the 1d100 roll are private and only seen by the GM.
+ */
+let options = ["Weal, for good results", "Woe, for bad results", "Weal and woe, for both good and bad results"];
+
+async function auguryResult() {
+    if (!canvas.tokens.controlled.length) {
+        ui.notifications.warn("No controlled tokens.");
+        return;
+    }
+
+    let token = canvas.tokens.controlled[0];
+    if (!token.actor) {
+        ui.notifications.warn("Controlled token has no actor.");
+        return;
+    }
+
+    let item = token.actor.items.getName("Augury");
+    if (!item) {
+        ui.notifications.warn("Actor does not have an item named 'Augury'.");
+        return;
+    }
+
+    let availableUses = item.system.uses.value;
+    let maxUses = item.system.uses.max;
+    let chance;
+
+    if (availableUses === maxUses -1) {
+        chance = 0;
+    } else if (availableUses === maxUses - 2) {
+        chance = 25;
+    } else if (availableUses === maxUses - 3) {
+        chance = 50;
+    } else if (availableUses === maxUses - 4) {
+        chance = 75;
+    } else {
+        chance = 100;
+    }
+
+    let result = "";
+    let rollResult = "";
+    if (availableUses === maxUses - 1) {
+        result = `None, GM chooses. NO roll.`;
+    } else {
+        let roll = new Roll('1d100');
+        await roll.evaluate();
+        rollResult = `The result of the d100 roll is: <span style="color:blue">${roll.total}</span>`;
+
+        if (roll.total <= chance) {
+            let randomOption = options[Math.floor(Math.random() * options.length)];
+            result = `${randomOption}`;
+        } else {
+            result = `None, GM chooses.`;
+        }
+
+        if (game.dice3d) {
+            await game.dice3d.showForRoll(roll);
+        }
+    }
+
+    let description = `<b>${token.name}</b> is casting the <i>Augury</i> spell to predict the outcome of a specific course of action.`;
+
+    ChatMessage.create({
+        user: game.user._id,
+        speaker: { alias: token.name },
+        content: `${description}<br/><br/><b>Choose one between:</b><br/><br/>- ${options.join("<br/>- ")}<br/><br/><b>The random result is as follows:</b><br/>${result}<br/><br/><b>${rollResult}</b>`,
+        whisper: game.users.contents.filter(u => u.isGM).map(u => u._id)
+    });
+}
+
+auguryResult();
