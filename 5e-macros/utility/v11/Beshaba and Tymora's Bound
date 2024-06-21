@@ -1,0 +1,57 @@
+/* Version: 1.0.0
+ * Creator: Fridan99
+ * Select the tokens you want to involve in a possible target, run the macro, and the name of the randomly chosen token will appear. 
+ * There are 2 parts that have a delay, modify the milliseconds to suit your needs.
+ */
+
+// Array of funny descriptions
+let descriptions = [
+    "🎲 Tymora's coin is in the air and Beshaba's eyes are on you! Will it land in your favor or will you be the butt of Beshaba's joke? The flip is in the air... 🎲",
+    "🌟 You're walking the tightrope between Tymora's favor and Beshaba's tricks. Will you keep your balance or take a tumble? Hold your breath, it's a long way down... 🌟",
+    "🧙‍♂️ Tymora has blessed you, but Beshaba is lurking in the shadows. Will you bask in the light or stumble in the dark? The magic is tingling... 🧙‍♂️",
+    "🐉 Tymora's luck dragon has chosen you, but Beshaba's mischievous imp is not far behind! Will you soar the skies or get tangled in mischief? The wind is picking up... 🐉",
+    "🎭 On the grand stage of Tymora and Beshaba, you're the star! Will you bask in the applause or trip over the props? The curtain is rising... 🎭",
+    "🎯 Tymora's lucky arrow is aimed at you, but so is Beshaba's jinxed dart! Will you catch the blessing or the curse? The target is set... 🎯",
+    "💫 You're caught in the cosmic dance of Tymora and Beshaba. Will you waltz with Lady Luck or stumble with the Maid of Misfortune? The music is playing... 💫",
+    "🍀 As Tymora's four-leaf clover spins in the wind and Beshaba's black cat crosses your path, the tokens await their fate. Will you find a pot of gold or trip over a horseshoe? Luck is in the air... 🍀",
+    "⏳ Tymora's hourglass is running, but Beshaba's clock is ticking backwards! Will you seize the moment or lose track of time? The sands are shifting... ⏳",
+    "🌈 You're at the end of Tymora's rainbow, but Beshaba's storm is brewing! Will you find a treasure or get caught in the rain? The weather is changing... 🌈",
+    "🎩 Tymora's top hat is full of surprises, but watch out for Beshaba's rabbit hole! Will you pull out a magic trick or fall into a trap? The show is about to start... 🎩",
+    "🔮 Tymora's crystal ball is clear, but Beshaba's mirror is cracked! Will you see a bright future or face a twist of fate? The visions are swirling... 🔮",
+    "🍎 You're the apple of Tymora's eye, but beware of Beshaba's rotten fruit! Will you enjoy a sweet victory or taste a bitter defeat? The harvest is ready... 🍎",
+    "🌙 Under Tymora's crescent moon and Beshaba's starless night, the tokens stand ready. Will you bask in moonlight or lose your way in the dark? The night is whispering... 🌙"
+];
+
+// Display a random funny description at the top of the chat
+let randomDescription = descriptions[Math.floor(Math.random() * descriptions.length)];
+ChatMessage.create({
+    content: randomDescription
+});
+
+let tokens = canvas.tokens.controlled;
+let tokenNames = tokens.map(t => t.name);
+
+if (tokenNames.length === 0) {
+    ui.notifications.warn("No tokens selected.");
+} else {
+    let randomTokenName = tokenNames[Math.floor(Math.random() * tokenNames.length)];
+
+    // Display all selected tokens
+    ChatMessage.create({
+        content: `<b>Selected Tokens:</b> ${tokenNames.join(", ")}`
+    });
+
+    // Delay the display of "The chosen is:" by 1 second
+    setTimeout(function() {
+        ChatMessage.create({
+            content: `<b>The chosen is:</b>`
+        });
+    }, 1000);
+
+    // Delay the display of the randomly chosen token by 3 seconds
+    setTimeout(function() {
+        ChatMessage.create({
+            content: `${randomTokenName}`
+        });
+    }, 3000);
+}
