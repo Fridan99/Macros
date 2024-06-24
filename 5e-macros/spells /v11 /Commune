@@ -6,7 +6,7 @@
  * Put the item spell Commune in the character sheet of the actor
  * In the details of the Commune spell item, put a Limited Uses like 20 of 20 per Long Rest for example, Resource Consuption: 1 Item Uses: Commune (20 per lr). 
  * Let's run the macro. The macro auto-detects how many times the Commune spell has been used, and automatically rolls 1d100 from the 2nd use, respecting the percentage for each subsequent use to get a random answer. You can choose to make it public or private, in case of public just click the Skip button, you don't need to fill in the question fields, just ask your GM. For private, fill in the question fields, then press Secretly, and wait for your GM to send you a whisper. 
- * El GM es el único que ve la información relevante sea publico o secreto.  
+ * The GM is the only one who sees the relevant information whether it is public or secret.
  */
 
 let descriptions = [
