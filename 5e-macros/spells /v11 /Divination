@@ -1,6 +1,5 @@
 /* Version: 1.0.0
  * Creator: Fridan99
- * Colaborator: Freeze (Help blinding 3d dice roll for player)
  * Need the Item Macro module or midi-qol
  * Go to the Item Macro or DIME tab above, of the Divination spell item and paste the code, set On use Macro: After Active Effects
  * Put the item spell Divination in the character sheet of the actor
