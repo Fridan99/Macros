@@ -1,4 +1,4 @@
-/* Version: 1.0.2
+/* Version: 1.0.3
  * Creator: Fridan99
  * Macro name: Beshaba and Tymora's Fate 
  * Create a script macro, copy, paste and let the party begin
@@ -24,36 +24,30 @@ let descriptions = [
     "🌙 Under Tymora's crescent moon and Beshaba's starless night, the tokens stand ready. Will you bask in moonlight or lose your way in the dark? The night is whispering... 🌙"
 ];
 
-// Display a random funny description at the top of the chat
+// Display a random funny description and the selected tokens in the same chat card
 let randomDescription = descriptions[Math.floor(Math.random() * descriptions.length)];
-ChatMessage.create({
-    content: randomDescription
-});
-
 let tokens = canvas.tokens.controlled;
 let tokenNames = tokens.map(t => t.name);
 
 if (tokenNames.length === 0) {
-    ui.notifications.warn("No tokens selected.");
+    ui.notifications.warn("no tokens selected.");
 } else {
     let randomTokenName = tokenNames[Math.floor(Math.random() * tokenNames.length)];
 
-    // Display all selected tokens
     ChatMessage.create({
-        content: `<b>Selected Tokens:</b> ${tokenNames.join(", ")}`
+        content: `<div style="background: linear-gradient(to bottom, #e6ccff, #ffcc99); padding: 8px; border-radius: 4px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">
+            <p style="font-size: 13px; font-weight: bold; color: #000000; margin-bottom: 4px;">${randomDescription}</p>
+            <br>
+            <p style="font-size: 13px; color: #000000; margin-bottom: 4px;"><b>Selected tokens:</b> ${tokenNames.join(", ")}</p>
+        </div>`
     });
 
-    // Delay the display of "The chosen is:" by 1 second
+    // Delay the display of "the chosen is:" and the randomly chosen token by 2 seconds
     setTimeout(function() {
         ChatMessage.create({
-            content: `<b>The chosen is:</b>`
+            content: `<div style="background: linear-gradient(to bottom, #e6ccff, #ffcc99); padding: 8px; border-radius: 4px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">
+                <p style="font-size: 13px; color: #000000; margin-bottom: 4px;"><b>The chosen is:</b> <span style="font-size: 13px; font-weight: bold; color: blue;">${randomTokenName}</span></p>
+            </div>`
         });
-    }, 900);
-
-    // Delay the display of the randomly chosen token by 3 seconds
-setTimeout(function() {
-    ChatMessage.create({
-        content: `<b><span style="color:blue">${randomTokenName}</span></b>`
-    });
-    }, 2100);
+    }, 2000);
 }
