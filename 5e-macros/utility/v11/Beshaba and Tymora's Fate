@@ -1,9 +1,9 @@
-/* Version: 1.0.4
+/* Version: 1.0.5
  * Creator: Fridan99
  * Macro name: Beshaba and Tymora's Fate 
  * Create a script macro, copy, paste and let the party begin
  * Select the tokens you want to involve in a possible target, run the macro, and the name of the randomly chosen token will appear. 
- * There are 2 parts that have a delay, modify the milliseconds to suit your needs.
+ * There are 1 part that have a delay of 0,5 sec (500 msec), modify the milliseconds to suit your needs.
  */
 
 // Array of funny descriptions
