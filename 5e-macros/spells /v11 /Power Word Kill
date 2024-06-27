@@ -17,7 +17,7 @@ const targetActor = targetToken.actor;
 const targetHP = targetActor.system.attributes.hp.value;
 
 // Check if the targeted token has the "Death Ward" effect
-const deathWardEffect = targetActor.temporaryEffects.find(e => e.label === "Death Ward");
+const deathWardEffect = targetActor.appliedEffects.find(e => e.name === "Death Ward");
 
 // Determine the message and action based on the current hit points and "Death Ward" effect
 let message;
