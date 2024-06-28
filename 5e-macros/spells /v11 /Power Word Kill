@@ -1,5 +1,6 @@
-/* Version: 1.0.0
+/* Version: 1.1.0
  * Creator: Fridan99
+ * Colaborator: thatlonelybugbear (help improving the macro) 
  * Need the Item Macro module or midi-qol
  * Go to the Item Macro or DIME tab above, of the Power Word Kill spell item and paste the code, set On use Macro: After Active Effects
  * Put the item spell Power Word Kill in the character sheet of the actor
@@ -10,8 +11,8 @@
 // Power Word Kill Macro
 
 // Get the targeted token
-const targetToken = game.scenes.active.tokens.get(args[0].targets[0].id);
-const targetActor = targetToken.actor;
+const target = workflow.targets.first();
+const targetActor = target.actor;
 
 // Check the current hit points of the targeted token
 const targetHP = targetActor.system.attributes.hp.value;
@@ -23,17 +24,18 @@ const deathWardEffect = targetActor.appliedEffects.find(e => e.name === "Death W
 let message;
 let color;
 if (targetHP > 100) {
-  message = `The spell doesn't do anything because the targeted token <strong>${args[0].targets[0].name}</strong> has more than 100 hit points (<strong style="color:white;">${targetHP} current HP</strong>).`;
+  message = `The spell doesn't do anything because the targeted token <strong>${target.name}</strong> has more than 100 hit points (<strong style="color:white;">${targetHP} current HP</strong>).`;
   color = "#4CAF50"; // Green
 } else if (deathWardEffect) {
   // The token has the "Death Ward" effect, so prevent the damage and remove the effect
-  await deathWardEffect.delete();
-  message = `The token <strong>${args[0].targets[0].name}</strong> prevents to die, and the Death Ward spell is lost.`;
+  await MidiQOL.socket().executeAsGM('removeEffects', {actorUuid: targetActor.uuid, effects: [deathWardEffect.id]});
+  message = `The token <strong>${target.name}</strong> prevents to die, and the Death Ward spell is lost.`;
   color = "#4CAF50"; // Green
 } else {
-  // Reduce the token's hit points to 0
-  await targetActor.update({ "system.attributes.hp.value": 0 });
-  message = `The token <strong>${args[0].targets[0].name}</strong> dies because it has less than 100 hit points (<strong style="color:white;">${targetHP} current HP</strong>).`;
+  // Reduce the token's hit points to 0 using MidiQOL
+  const damage = targetHP + (targetActor.system.attributes.hp.temp ?? 0);
+  await MidiQOL.applyTokenDamage([{damage, type: 'necrotic'}], damage, new Set([target]), rolledItem, new Set(), {forceApply: true});
+  message = `The token <strong>${target.name}</strong> dies because it has less than 100 hit points (<strong style="color:white;">${targetHP} current HP</strong>).`;
   color = "#F44336"; // Red
 }
 
