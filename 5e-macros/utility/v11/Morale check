@@ -1,0 +1,126 @@
+/* Version: 1.0.0
+ * Creator: Fridan99
+ * Macro hotbar
+ * This is a macro to recreate morale effects on enemies (keep fighting? or run away). 
+ * Select enemies that have not yet fallen in combat, and run the macro. 
+ * If either of the 2 options below is selected, the roll will have either Advantage or Disadvantage. If neither is selected, it will be a Normal roll. 
+ */
+
+// Check if at least one token is selected
+if (canvas.tokens.controlled.length === 0) {
+  ui.notifications.error("Please select at least one token to run the Morale Check macro.");
+  return;
+}
+
+// Create the Morale Check popup window
+new Dialog({
+  title: "Morale Check",
+  content: `
+    <form style="background: linear-gradient(to right, #85c1e9, #aed6f1); color: #2c3e50; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+      <div class="form-group" style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+        <label style="font-size: 16px; font-weight: bold; margin-right: 70px; display: flex; align-items: center;">
+          <input type="radio" name="morale-visibility" value="public" checked style="margin-right: 5px;"> Public
+        </label>
+        <label style="font-size: 16px; font-weight: bold; display: flex; align-items: center;">
+          <input type="radio" name="morale-visibility" value="private" style="margin-right: 5px;"> Private
+        </label>
+      </div>
+      <hr style="width: 100%; border: 1px solid #2c3e50; margin: 20px 0;">
+      <div style="text-align: left; font-size: 14px; margin-top: 10px;">
+        <span style="background: linear-gradient(to right, white, #add8e6); padding: 5px; border-radius: 15px; display: inline-block;"><b>A creature might flee under any of the following circumstances:</b></span>
+        <ul>
+          <li>The creature is surprised.</li>
+          <li>The creature is reduced to half its hit points or fewer for the first time in the battle.</li>
+          <li>The creature has no way to harm the opposing side on its turn.</li>
+        </ul>
+        <span style="background: linear-gradient(to right, white, #add8e6); padding: 5px; border-radius: 15px; display: inline-block;"><b>A group of creatures might flee under any of the following circumstances:</b></span>
+        <ul>
+          <li>All the creatures in the group are surprised.</li>
+          <li>The group's leader is reduced to 0 hit points, incapacitated, taken prisoner, or removed from battle.</li>
+          <li>The group is reduced to half its original size with no losses on the opposing side.</li>
+        </ul>
+      </div>
+      <hr style="width: 100%; border: 1px solid #2c3e50; margin: 20px 0;">
+      <div style="text-align: left; font-size: 14px; margin-top: 10px;">
+        <label style="display: flex; align-items: flex-start; margin-bottom: 10px;">
+          <input type="checkbox" name="enemy-superiority" style="margin-right: 10px;">
+          <span>If the <b><u>enemy group</u></b> is overwhelming, are in an advantageous position or situation, or outnumber the player's group, then the saving throw is made with <b style="color: green;">advantage</b>.</span>
+        </label>
+        <label style="display: flex; align-items: flex-start;">
+          <input type="checkbox" name="player-superiority" style="margin-right: 10px;">
+          <span>If the <b><u>player's party</u></b> is overwhelming, are in an advantageous position or situation, or outnumber the enemy party, then the saving throw is made with <b style="color: red;">disadvantage</b>.</span>
+        </label>
+      </div>
+    </form>
+  `,
+  buttons: {
+    roll: {
+      icon: "<i class='fas fa-dice-d20'></i>",
+      label: "Roll",
+      callback: async () => {
+        await handleMoraleCheck();
+      },
+    },
+  },
+}).render(true);
+
+async function handleMoraleCheck() {
+  const isPrivate = $("input[name='morale-visibility'][value='private']").prop("checked");
+  const isPublic = $("input[name='morale-visibility'][value='public']").prop("checked");
+  const playerSuperiority = $("input[name='player-superiority']").prop("checked");
+  const enemySuperiority = $("input[name='enemy-superiority']").prop("checked");
+
+  let moraleSetting = "normal";
+  if (enemySuperiority && !playerSuperiority) {
+    moraleSetting = "advantage";
+  } else if (playerSuperiority && !enemySuperiority) {
+    moraleSetting = "disadvantage";
+  }
+
+  let passedCount = 0;
+  let chatMessage = "";
+
+  const rolls = await Promise.all(
+    canvas.tokens.controlled.map(async (token) => {
+      let roll;
+      switch (moraleSetting) {
+        case "advantage":
+          roll = await token.actor.rollAbilitySave("wis", { advantage: true, chatMessage: false });
+          break;
+        case "disadvantage":
+          roll = await token.actor.rollAbilitySave("wis", { disadvantage: true, chatMessage: false });
+          break;
+        default:
+          roll = await token.actor.rollAbilitySave("wis", { chatMessage: false });
+      }
+      return { token, roll };
+    })
+  );
+
+  for (let { token, roll } of rolls) {
+    const result = roll.total >= 10 ? "succeed" : "fail";
+    const color = result === "succeed" ? "green" : "red";
+
+    if (isPrivate) {
+      chatMessage += `<p>${token.name} <span style="color:${color}">${result} (${roll.total})</span></p>`;
+    } else {
+      chatMessage += `<p>${token.name} <span style="color:${color}">${result} (${roll.total})</span></p>`;
+    }
+
+    if (result === "succeed") {
+      passedCount++;
+    }
+  }
+
+  if (passedCount >= Math.ceil(canvas.tokens.controlled.length / 2)) {
+    chatMessage += `<p style="background-color:green; color:white;">Enemies remain fighting</p>`;
+  } else {
+    chatMessage += `<p style="background-color:red; color:white;">Enemies flee</p>`;
+  }
+
+  if (isPrivate) {
+    await ChatMessage.create({ content: chatMessage, whisper: [game.users.find((u) =>u.isGM).id] });
+  } else {
+    await ChatMessage.create({ content: chatMessage });
+  }
+}
