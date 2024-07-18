@@ -1,0 +1,127 @@
+/* Version: 1.0.0
+ * Creator: Fridan99
+ * Need the Item Macro module or midi-qol
+ * Go to the Item Macro or DIME tab above, of the Commune with Nature spell item and paste the code, set On use Macro: After Active Effects
+ * Put the item spell Commune with Nature in the character sheet of the actor
+ * Let's run the macro. Choose up to 3 pieces of information. 
+ * The GM and the player are the only ones who sees the relevant information in private mode. 
+ */
+
+// Commune with Nature Macro
+
+// Define the options
+const options = [
+  { label: "Terrain", value: "terrain" },
+  { label: "Bodies of Water", value: "bodies_of_water" },
+  { label: "Prevalent Plants", value: "prevalent_plants" },
+  { label: "Prevalent Minerals", value: "prevalent_minerals" },
+  { label: "Prevalent Animals", value: "prevalent_animals" },
+  { label: "Prevalent Peoples", value: "prevalent_peoples" },
+  { label: "Powerful Celestials", value: "powerful_celestials" },
+  { label: "Powerful Fey", value: "powerful_fey" },
+  { label: "Powerful Fiends", value: "powerful_fiends" },
+  { label: "Powerful Elementals", value: "powerful_elementals" },
+  { label: "Powerful Undead", value: "powerful_undead" },
+  { label: "Influence from Other Planes", value: "other_plane_influence" },
+  { label: "Buildings", value: "buildings" }
+];
+
+// Define the privacy options
+const privacyOptions = [
+  { label: "Public", value: "public" },
+  { label: "Private", value: "private" }
+];
+
+// Function to create the dialog
+async function createDialog() {
+  const selected = await new Promise((resolve) => {
+    new Dialog({
+      title: "Commune with Nature",
+      content: `
+        <style>
+          .form-group {
+            margin-bottom: 10px;
+          }
+          .form-group label {
+            font-weight: bold;
+            color: #4a4a4a;
+          }
+          form {
+            background: linear-gradient(to bottom right, #90ee90, #adff2f);
+            padding: 15px;
+            border-radius: 15px;
+            color: black;
+          }
+          h3 {
+            text-align: center;
+          }
+        </style>
+        <form>
+          <h3>🌿 Select up to 3 options: 🌿</h3>
+          ${options.map((option) => `
+            <div class="form-group">
+              <input type="checkbox" id="${option.value}" name="${option.value}">
+              <label for="${option.value}">${option.label}</label>
+            </div>
+          `).join('')}
+          <h3>🌿 Privacy: 🌿</h3>
+          ${privacyOptions.map((option, index) => `
+            <div class="form-group">
+              <input type="radio" id="${option.value}" name="privacy" value="${option.value}" ${index === 0 ? 'checked' : ''}>
+              <label for="${option.value}">${option.label}</label>
+            </div>
+          `).join('')}
+        </form>
+      `,
+      buttons: {
+        submit: {
+          icon: '<i class="fas fa-check"></i>',
+          label: "Submit",
+          callback: (html) => {
+            const selectedOptions = options.filter((option) => html.find(`#${option.value}`).is(':checked')).map((option) => option.label);
+            if (selectedOptions.length > 3) {
+              ui.notifications.error("You can only select up to 3 options.");
+              return;
+            }
+            const privacyOption = privacyOptions.find((option) => html.find(`#${option.value}`).is(':checked')).value;
+            resolve({ selectedOptions, privacyOption });
+          }
+        }
+      },
+      default: "submit"
+    }).render(true);
+  });
+
+  return selected;
+}
+
+// Run the macro
+async function runMacro() {
+  try {
+    const { selectedOptions, privacyOption } = await createDialog();
+
+    const tokenName = `<b><span style="color: blue;">${canvas.tokens.controlled[0]?.name || "The token"}</span></b>`;
+    const formattedPrivacyOption = `<b>${privacyOption}</b>`;
+    const message = `
+      <p>${tokenName} is requesting for information about:</p>
+      <h3>Commune with Nature Results:</h3>
+      <ul>
+        ${selectedOptions.map((option) => `<li>${option}</li>`).join('')}
+      </ul>
+      <p>You get information on the ground up to 3 miles, or 300 feet if you are inside caves or natural underground.</p>
+      <p>${tokenName} has specified the following level of confidentiality: ${formattedPrivacyOption}</p>
+    `;
+
+    const currentUser = game.users.find((u) => u.id === game.userId);
+
+    if (privacyOption === "private") {
+      await ChatMessage.create({ content: message, whisper: [currentUser.id, ...game.users.filter((u) => u.isGM).map((u) => u.id)] });
+    } else {
+      await ChatMessage.create({ content: message, user: currentUser });
+    }
+  } catch (error) {
+    ui.notifications.error("An error occurred while running the Commune with Nature macro. Please check the console for more information.");
+  }
+}
+
+runMacro();
