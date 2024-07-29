@@ -1,4 +1,4 @@
-/* Version: 1.0.0
+/* Version: 1.1.0
  * Creator: Fridan99
  * Macro hotbar
  * This is a macro to recreate morale effects on enemies (keep fighting? or run away). 
@@ -114,8 +114,10 @@ async function handleMoraleCheck() {
 
   if (passedCount >= Math.ceil(canvas.tokens.controlled.length / 2)) {
     chatMessage += `<p style="background-color:green; color:white;">Enemies remain fighting</p>`;
+    chatMessage += `<img src="https://i.postimg.cc/ZYgPBgBL/Courage.jpg" alt="Enemies remain fighting">`; // Add this line
   } else {
     chatMessage += `<p style="background-color:red; color:white;">Enemies flee</p>`;
+    chatMessage += `<img src="https://i.postimg.cc/wjRGRLj1/Fear.jpg" alt="Enemies flee">`; // Add this line
   }
 
   if (isPrivate) {
