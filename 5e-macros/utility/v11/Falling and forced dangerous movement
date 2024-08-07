@@ -1,11 +1,13 @@
-/* Version: 1.0.1
+/* Version: 1.1.2
  * Creator: Fridan99
+Colabotators: thatlonelybugbear (added some recommendations and improvements)
  * Macro name: Falling and forced dangerous movement
  * Create a script macro, copy, paste and use it
  * There are 3 options: 
  * 1. Falling (select 1 or more tokens, then fill in the fall ft, and the damage is auto-applied to the selected tokens).
  * 2. Falling onto a creature (select 2 tokens, then choose who will be hit, roll saving throw in chat and auto-apply damage and prone condition if the impacted creature is not 2 or higher size than falling creature).
  * 3. Forced movement into dangerous square (select 1 or more tokens, roll saving throw and auto-apply prone condition on failed).
+ * Recommended to use with the Health Monitor module, to see the auto applied hp changes better.
  */
 
 new Dialog({
@@ -27,6 +29,12 @@ new Dialog({
       label: "Next",
       callback: async (html) => {
         let fallingType = html.find('[name="falling-type"]').val();
+        if (fallingType === "falling-onto-creature") {
+          if (canvas.tokens.controlled.length !== 2) {
+            ui.notifications.warn("Please select exactly 2 tokens.");
+            return;
+          }
+        }
         if (fallingType === "falling") {
           new Dialog({
             title: "Falling Damage",
@@ -45,25 +53,27 @@ new Dialog({
               roll: {
                 label: "Roll",
                 callback: async (html) => {
-                  let feet = parseInt(html.find('[name="feet-fallen"]').val());
-                  let dice = Math.floor(feet / 10);
-                  let roll = new Roll(`${dice}d6`);
-                  await roll.roll({async: true});
-                  
+                  const feet = parseInt(html.find('[name="feet-fallen"]').val());
+                  const dice = Math.floor(feet / 10);
                   let selectedTokens = canvas.tokens.controlled;
-                  if (selectedTokens.length === 0) {
-                    ui.notifications.warn("Please select a token.");
-                    return;
+                  if (!selectedTokens.length) {
+                    ui.notifications.warn('Please select at least one token.');
+                    let i = 0;
+                    while (!selectedTokens.length && i < 10) { // Check every 1000ms for selectedToken.length, with a max timeout of 10*1000ms
+                      await new Promise((resolve) => setTimeout(resolve, 1000));
+                      selectedTokens = canvas.tokens.controlled;
+                      i++;
+                    }
                   }
-                  
-                  let tokenNames = selectedTokens.map(token => `<b style="color: blue;">${token.name}</b>`).join(", ");
-                  
+                  if (!selectedTokens.length) return ui.notifications.error("You didn't select any tokens; roll cancelled");
+                  const tokenNames = selectedTokens.map((token) => `<b style="color: blue;">${token.name}</b>`).join(', ');
+                  const roll = await new Roll(`${dice}d6`).evaluate();
                   roll.toMessage({
-                    speaker: { alias: "GM" },
-                    flavor: `${tokenNames} receive the following <b>bludgeoning</b> damage for falling <b>${feet}</b> feet`
+                    speaker: { alias: 'GM' },
+                    flavor: `${tokenNames} receive the following <b>bludgeoning</b> damage for falling <b>${feet}</b> feet`,
                   });
 
-                  selectedTokens.forEach(token => {
+                  selectedTokens.forEach((token) => {
                     token.actor.applyDamage(roll.total);
                   });
                 }
@@ -80,11 +90,6 @@ new Dialog({
             }
           }).render(true);
         } else if (fallingType === "falling-onto-creature") {
-          if (canvas.tokens.controlled.length !== 2) {
-            ui.notifications.warn("Please select exactly 2 tokens.");
-            return;
-          }
-          
           new Dialog({
             title: "Falling onto a Creature",
             content: `
@@ -113,7 +118,7 @@ new Dialog({
                   let feet = parseInt(html.find('[name="feet-fallen"]').val());
                   let dice = Math.floor(feet / 10);
                   let roll = new Roll(`${dice}d6`);
-                  await roll.roll({async: true});
+                  await roll.evaluate();
                   
                   let firstCreature = canvas.tokens.controlled.find(token => token.id !== html.find('[name="second-creature"]').val());
                   let secondCreatureId = html.find('[name="second-creature"]').val();
@@ -133,7 +138,7 @@ new Dialog({
                         secondCreature.actor.applyDamage(0); // Apply 0 damage to the second creature
                         ChatMessage.create({
                           speaker: { alias: "GM" },
-                          content: `${secondCreature.name} succeeded the saving throw. Only ${firstCreature.name} receives the damage.`
+                          content: `<b style="color: blue;">${secondCreature.name}</b> has <b style="color: green;">succeeded</b> the saving throw. Only ${firstCreature.name} receives the <b>bludgeoning</b> damage.`
                         });
                       } else {
                         let halfDamage = Math.floor(roll.total / 2);
@@ -153,7 +158,7 @@ new Dialog({
                         }
                         ChatMessage.create({
                           speaker: { alias: "GM" },
-                          content: `${secondCreature.name} failed the saving throw. Both ${firstCreature.name} and ${secondCreature.name} receive ${halfDamage} damage and ${secondCreature.name} is now prone.`
+                          content: `<b style="color: blue;">${secondCreature.name}</b> has <b style="color: red;">failed</b> the saving throw. Both ${firstCreature.name} and ${secondCreature.name} receive ${halfDamage} <b>bludgeoning</b> damage and ${secondCreature.name} is now prone.`
                         });
                       }
                     }
@@ -178,7 +183,7 @@ new Dialog({
               <p>Forced movement can’t move a creature through blocking terrain, it simply fails.</p>
               <p>Targets forced into dangerous terrain (like: a pit, water, wall of fire or similar) receive a <b>DC 15 Dexterity saving throw</b> immediately before entering the unsafe square they are forced into, or you can attempt a <b>Dexterity (Acrobatics)</b> check using your <b style="color: blue;">reaction</b> instead the Dexterity saving throw.</p>
               <p>A <b>success</b> leaves the target prone at the edge of the square before entering the unsafe square</p>
-              <p>A <b>failed</b> saving throw means that the creature enter in that dangerous square by applying the appropriate consequence.</p>
+              <p>A <b>failed</b> saving throw means that the creature enters that dangerous square by applying the appropriate consequence.</p>
             `,
             buttons: {
               dexSave: {
@@ -200,12 +205,12 @@ new Dialog({
                         await game.dfreds.effectInterface.addEffect({ effectName: 'Prone', uuid: token.actor.uuid });
                         ChatMessage.create({
                           speaker: { alias: "GM" },
-                          content: `<b style="color: blue;">${token.name}</b> falls prone at the edge of the square before entering the unsafe square.`
+                          content: `<b style="color: blue;">${token.name}</b> has <b style="color: green;">succeeded</b> the saving throw and falls prone at the edge of the square before entering the unsafe square.`
                         });
                       } else {
                         ChatMessage.create({
                           speaker: { alias: "GM" },
-                          content: `<b style="color: blue;">${token.name}</b> enters in that dangerous square by applying the appropriate consequence.`
+                          content: `<b style="color: blue;">${token.name}</b> has <b style="color: red;">failed</b> the saving throw and enters in that dangerous square by applying the appropriate consequence.`
                         });
                       }
                     }
@@ -231,12 +236,12 @@ new Dialog({
                         await game.dfreds.effectInterface.addEffect({ effectName: 'Prone', uuid: token.actor.uuid });
                         ChatMessage.create({
                           speaker: { alias: "GM" },
-                          content: `<b style="color: blue;">${token.name}</b> falls prone at the edge of the square before entering the unsafe square.`
+                          content: `<b style="color: blue;">${token.name}</b> has <b style="color: green;">succeeded</b> the saving throw and falls prone at the edge of the square before entering the unsafe square.`
                         });
                       } else {
                         ChatMessage.create({
                           speaker: { alias: "GM" },
-                          content: `<b style="color: blue;">${token.name}</b> enters in that dangerous square by applying the appropriate consequence.`
+                          content: `<b style="color: blue;">${token.name}</b> has <b style="color: red;">failed</b> the saving throw and enters in that dangerous square by applying the appropriate consequence.`
                         });
                       }
                     }
