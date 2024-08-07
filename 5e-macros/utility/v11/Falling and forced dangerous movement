@@ -1,11 +1,11 @@
-/* Version: 1.0.0
+/* Version: 1.0.1
  * Creator: Fridan99
  * Macro name: Falling and forced dangerous movement
  * Create a script macro, copy, paste and use it
  * There are 3 options: 
  * 1. Falling (select 1 or more tokens, then fill in the fall ft, and the damage is auto-applied to the selected tokens).
  * 2. Falling onto a creature (select 2 tokens, then choose who will be hit, roll saving throw in chat and auto-apply damage and prone condition if the impacted creature is not 2 or higher size than falling creature).
- * 3. Forced movement into dangerous square (select 1 or more tokens, select 1 or more tokens, roll saving throw and auto-apply prone condition on failed).
+ * 3. Forced movement into dangerous square (select 1 or more tokens, roll saving throw and auto-apply prone condition on failed).
  */
 
 new Dialog({
