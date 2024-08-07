@@ -1,0 +1,270 @@
+/* Version: 1.0.0
+ * Creator: Fridan99
+ * Macro name: Falling and forced dangerous movement
+ * Create a script macro, copy, paste and use it
+ * There are 3 options: 
+ * 1. Falling (select 1 or more tokens, then fill in the fall ft, and the damage is auto-applied to the selected tokens).
+ * 2. Falling onto a creature (select 2 tokens, then choose who will be hit, roll saving throw in chat and auto-apply damage and prone condition if the impacted creature is not 2 or higher size than falling creature).
+ * 3. Forced movement into dangerous square (select 1 or more tokens, select 1 or more tokens, roll saving throw and auto-apply prone condition on failed).
+ */
+
+new Dialog({
+  title: "Choose Falling Type",
+  content: `
+    <form>
+      <div class="form-group">
+        <label>Choose an option:</label>
+        <select id="falling-type" name="falling-type" style="width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; height: auto;">
+          <option value="falling">Falling</option>
+          <option value="falling-onto-creature">Falling onto a creature</option>
+          <option value="forced-movement">Forced movement into dangerous square</option>
+        </select>
+      </div>
+    </form>
+  `,
+  buttons: {
+    next: {
+      label: "Next",
+      callback: async (html) => {
+        let fallingType = html.find('[name="falling-type"]').val();
+        if (fallingType === "falling") {
+          new Dialog({
+            title: "Falling Damage",
+            content: `
+              <form>
+                <div class="form-group">
+                  <label>Feet Fallen:</label>
+                  <input type="number" id="feet-fallen" name="feet-fallen" min="0" style="width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 4px;"/>
+                </div>
+                <small>Note: The maximum by rules is 200 ft, but the macro allows you to exceed that limit.</small>
+                <br><br>
+                <small>You can use this rule to free fall objects of 5 lbs. or higher onto a target.</small>
+              </form>
+            `,
+            buttons: {
+              roll: {
+                label: "Roll",
+                callback: async (html) => {
+                  let feet = parseInt(html.find('[name="feet-fallen"]').val());
+                  let dice = Math.floor(feet / 10);
+                  let roll = new Roll(`${dice}d6`);
+                  await roll.roll({async: true});
+                  
+                  let selectedTokens = canvas.tokens.controlled;
+                  if (selectedTokens.length === 0) {
+                    ui.notifications.warn("Please select a token.");
+                    return;
+                  }
+                  
+                  let tokenNames = selectedTokens.map(token => `<b style="color: blue;">${token.name}</b>`).join(", ");
+                  
+                  roll.toMessage({
+                    speaker: { alias: "GM" },
+                    flavor: `${tokenNames} receive the following <b>bludgeoning</b> damage for falling <b>${feet}</b> feet`
+                  });
+
+                  selectedTokens.forEach(token => {
+                    token.actor.applyDamage(roll.total);
+                  });
+                }
+              }
+            },
+            default: "roll",
+            render: (html) => {
+              html.css({
+                "background-color": "#f9f9f9",
+                "border": "1px solid #ccc",
+                "border-radius": "8px",
+                "padding": "10px"
+              });
+            }
+          }).render(true);
+        } else if (fallingType === "falling-onto-creature") {
+          if (canvas.tokens.controlled.length !== 2) {
+            ui.notifications.warn("Please select exactly 2 tokens.");
+            return;
+          }
+          
+          new Dialog({
+            title: "Falling onto a Creature",
+            content: `
+              <form>
+                <div class="form-group">
+                  <label>Who is impacted?</label>
+                  <select id="second-creature" name="second-creature" style="width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 4px;">
+                    ${canvas.tokens.controlled.map(token => `<option value="${token.id}">${token.name}</option>`).join('')}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Feet Fallen:</label>
+                  <input type="number" id="feet-fallen" name="feet-fallen" min="0" style="width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 4px;"/>
+                </div>
+                <small>Note: The maximum by rules is 200 ft, but the macro allows you to exceed that limit.</small>
+                <hr>
+                <small>When a creature falls on another creature from at least 10 ft. high, the creature being hit must make a <b>DC 15 Dexterity saving throw</b> or be impacted by the falling creature.</small> 
+<small><p>On a <b>success</b> the creature evades the impact and the falling creature takes the damage of the fall.</p></small> 
+<small><p>On a <b>failure</b> the creature is impacted and both creatures receive half damage from the fall, also the impacted creature falls prone unless it is two or more sizes larger than the falling creature.</p></small>
+              </form>
+            `,
+            buttons: {
+              roll: {
+                label: "Roll",
+                callback: async (html) => {
+                  let feet = parseInt(html.find('[name="feet-fallen"]').val());
+                  let dice = Math.floor(feet / 10);
+                  let roll = new Roll(`${dice}d6`);
+                  await roll.roll({async: true});
+                  
+                  let firstCreature = canvas.tokens.controlled.find(token => token.id !== html.find('[name="second-creature"]').val());
+                  let secondCreatureId = html.find('[name="second-creature"]').val();
+                  let secondCreature = canvas.tokens.get(secondCreatureId);
+                  
+                  roll.toMessage({
+                    speaker: { alias: "GM" },
+                    flavor: `<b style="color: blue;">${firstCreature.name}</b> falls onto <b style="color: blue;">${secondCreature.name}</b> from <b>${feet}</b> feet, receiving the following <b>bludgeoning</b> damage`
+                  });
+                  const flavor = 'The creature is trying to avoid the impact';
+                  await game.MonksTokenBar.requestRoll([{ token: secondCreature }], {
+                    request:'save:dex', dc:15, silent:true, fastForward:false, rollMode:'roll', flavor,
+                    callback: async (result) => {
+                      let success = result.grouproll >= result.dc;
+                      if (success) {
+                        firstCreature.actor.applyDamage(roll.total);
+                        secondCreature.actor.applyDamage(0); // Apply 0 damage to the second creature
+                        ChatMessage.create({
+                          speaker: { alias: "GM" },
+                          content: `${secondCreature.name} succeeded the saving throw. Only ${firstCreature.name} receives the damage.`
+                        });
+                      } else {
+                        let halfDamage = Math.floor(roll.total / 2);
+                        firstCreature.actor.applyDamage(halfDamage);
+                        secondCreature.actor.applyDamage(halfDamage);
+                        
+                        const sizeValues = { "Tiny": 0, "Small": 1, "Medium": 2, "Large": 3, "Huge": 4, "Gargantuan": 5 };
+                        let sizeDifference = sizeValues[secondCreature.actor.system.traits.size] - sizeValues[firstCreature.actor.system.traits.size];
+                        if (sizeDifference = 1) {
+                          if (!game.dfreds.effectInterface.hasEffectApplied('Prone', secondCreature.actor.uuid)) {
+                            await game.dfreds.effectInterface.addEffect({ effectName: 'Prone', uuid: secondCreature.actor.uuid });
+                            ChatMessage.create({
+                              speaker: { alias: "GM" },
+                              content: `${firstCreature.name} falls onto ${secondCreature.name}, and it falls prone`
+                            });
+                          }
+                        }
+                        ChatMessage.create({
+                          speaker: { alias: "GM" },
+                          content: `${secondCreature.name} failed the saving throw. Both ${firstCreature.name} and ${secondCreature.name} receive ${halfDamage} damage and ${secondCreature.name} is now prone.`
+                        });
+                      }
+                    }
+                  });
+                }
+              }
+            },
+            default: "roll",
+            render: (html) => {
+              html.css({
+                "background-color": "#f9f9f9",
+                "border": "1px solid #ccc",
+                "border-radius": "8px",
+                "padding": "10px"
+              });
+            }
+          }).render(true);
+        } else if (fallingType === "forced-movement") {
+          new Dialog({
+            title: "Forced Movement into Dangerous Square",
+            content: `
+              <p>Forced movement can’t move a creature through blocking terrain, it simply fails.</p>
+              <p>Targets forced into dangerous terrain (like: a pit, water, wall of fire or similar) receive a <b>DC 15 Dexterity saving throw</b> immediately before entering the unsafe square they are forced into, or you can attempt a <b>Dexterity (Acrobatics)</b> check using your <b style="color: blue;">reaction</b> instead the Dexterity saving throw.</p>
+              <p>A <b>success</b> leaves the target prone at the edge of the square before entering the unsafe square</p>
+              <p>A <b>failed</b> saving throw means that the creature enter in that dangerous square by applying the appropriate consequence.</p>
+            `,
+            buttons: {
+              dexSave: {
+                label: "Dexterity Saving Throw",
+                callback: async () => {
+                  let selectedTokens = canvas.tokens.controlled;
+                  if (selectedTokens.length === 0) {
+                    ui.notifications.warn("Please select a token.");
+                    return;
+                  }
+                  
+                  let token = selectedTokens[0];
+                  const flavor = 'The creature is trying to avoid the dangerous square';
+                  await game.MonksTokenBar.requestRoll([{ token }], {
+                    request:'save:dex', dc:15, silent:true, fastForward:false, rollMode:'roll', flavor,
+                    callback: async (result) => {
+                      let success = result.grouproll >= result.dc;
+                      if (success) {
+                        await game.dfreds.effectInterface.addEffect({ effectName: 'Prone', uuid: token.actor.uuid });
+                        ChatMessage.create({
+                          speaker: { alias: "GM" },
+                          content: `<b style="color: blue;">${token.name}</b> falls prone at the edge of the square before entering the unsafe square.`
+                        });
+                      } else {
+                        ChatMessage.create({
+                          speaker: { alias: "GM" },
+                          content: `<b style="color: blue;">${token.name}</b> enters in that dangerous square by applying the appropriate consequence.`
+                        });
+                      }
+                    }
+                  });
+                }
+              },
+              dexCheck: {
+                label: "Dexterity (Acrobatics) Check",
+                callback: async () => {
+                  let selectedTokens = canvas.tokens.controlled;
+                  if (selectedTokens.length === 0) {
+                    ui.notifications.warn("Please select a token.");
+                    return;
+                  }
+                  
+                  let token = selectedTokens[0];
+                  const flavor = 'The creature is trying to avoid the dangerous square';
+                  await game.MonksTokenBar.requestRoll([{ token }], {
+                    request:'check:acrobatics', dc:15, silent:true, fastForward:false, rollMode:'roll', flavor,
+                    callback: async (result) => {
+                      let success = result.grouproll >= result.dc;
+                      if (success) {
+                        await game.dfreds.effectInterface.addEffect({ effectName: 'Prone', uuid: token.actor.uuid });
+                        ChatMessage.create({
+                          speaker: { alias: "GM" },
+                          content: `<b style="color: blue;">${token.name}</b> falls prone at the edge of the square before entering the unsafe square.`
+                        });
+                      } else {
+                        ChatMessage.create({
+                          speaker: { alias: "GM" },
+                          content: `<b style="color: blue;">${token.name}</b> enters in that dangerous square by applying the appropriate consequence.`
+                        });
+                      }
+                    }
+                  });
+                }
+              }
+            },
+            default: "dexSave",
+            render: (html) => {
+              html.css({
+                "background-color": "#f9f9f9",
+                "border": "1px solid #ccc",
+                "border-radius": "8px",
+                "padding": "10px"
+              });
+            }
+          }).render(true);
+        }
+      }
+    }
+  },
+  default: "next",
+  render: (html) => {
+    html.css({
+      "background-color": "#f9f9f9",
+      "border": "1px solid #ccc",
+      "border-radius": "8px",
+      "padding": "10px"
+    });
+  }
+}).render(true);
