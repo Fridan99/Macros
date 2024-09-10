@@ -1,0 +1,57 @@
+/* Version: 1.1.0
+ * Creator: thatlonelybugbear
+ * Colaborators: Fridan99
+ * Need the Item Macro module or midi-qol
+ * Go to the Item Macro or DIME tab above, and paste the code
+ * Put the item in the character sheet of the actor, recommended as a favorite, then roll the item
+ * That variant feat works different as the vanilla 5e. Apply +2 bonus to damage rolls for each 1 penalty you take up to your proficiency bonus (instead of +10 / -5)
+ * Change the 2º benefit of the feat for: • Before you make a melee attack with a heavy weapon that you are proficient with, you can choose to take a penalty up to your proficiency bonus to the attack roll. On a hit, you add +2 to the attack’s damage roll for each penalty.
+ */
+const effect = actor.appliedEffects.find(e => e.getFlag("core","statusId") === "Great Weapon Master");
+if (args[0].tag === "OnUse" && args[0].macroPass !== "preAttackRoll") {
+    if (rolledItem.name !== "Great Weapon Master") return;
+    if(effect) return await effect.delete();
+    const profBonus = args[0].actor.system.attributes.prof;
+    const buttonDialog = await new Promise((resolve, reject) => {
+        let d = new Dialog({
+            title: "Choose the GWM attack bonuses",
+            buttons: Array.fromRange(profBonus,1).map(b=>({label:`-${b}/+${b*2}`, callback: () => {resolve(b)}})),
+            default: "0",
+            close: () => resolve(null)
+        }).render(true);
+    });
+    if (!buttonDialog) return;
+    const attackMalus = buttonDialog;
+    const damageBonus = buttonDialog*2;
+    const effectData = {
+        changes: [
+            {key: "flags.midi-qol.onUseMacroName", mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM, value: "ItemMacro.Great Weapon Master,preAttackRoll"},
+            {key: "flags.dnd5e.DamageBonusMacro", mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM, value: "ItemMacro.Great Weapon Master"},
+        ],
+        name: "Great Weapon Master effects",
+        duration: {startTime: game.time.worldTime},
+        flags: {
+            core:{statusId: "Great Weapon Master"},
+            world:{attack: -attackMalus, damage: damageBonus},
+        },
+        img: "modules/plutonium/media/icon/feat/phb-great-weapon-master.webp",
+    }
+    await args[0].actor.createEmbeddedDocuments("ActiveEffect", [effectData]);
+}
+
+if(args[0].macroPass === "preAttackRoll") {
+   if (!rolledItem.system.properties.has('hvy') || rolledItem.system.actionType !== "mwak" || !rolledItem.system.proficient) return;
+    if (!effect) return;
+    const attackMalus = effect.getFlag("world","attack");
+    Hooks.once("dnd5e.preRollAttack", (item, config) => {
+       foundry.utils.setProperty(config, "parts", config.parts.concat(`${attackMalus}`));
+    });   
+}
+
+if(args[0].tag === "DamageBonus") {
+    console.log(args)
+    if (!rolledItem.system.properties.has('hvy') || rolledItem.system.actionType !== "mwak" || !rolledItem.system.proficient) return;
+    if (!effect) return;
+    const damageBonus = effect.getFlag("world","damage");
+    return {damageRoll: `${damageBonus}`, flavor: "Great Weapon Master damage bonus"};
+}
