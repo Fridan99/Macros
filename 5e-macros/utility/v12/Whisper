@@ -1,0 +1,105 @@
+/* Version: 1.0.0
+ * Creator: Fridan99
+ * Macro name: Whisper 
+ * Create a script macro in the hotbar, copy, paste and let the party begin
+ * The macro plays a sound when whisper, to hear a sound change the route src: "worlds/d-d-waterdeep-dragon-heist/audio/048_-_System%20sounds/notify-169186.ogg", to src: "YOUR PATH",
+ * If you don't know which is the path of your sound, try to put an Ambient Sound Controls option in the left menu in the canvas and in the Source File Path, try to find the the sound and copy/paste the path.
+ */
+
+// Create a dialog to select players
+let players = game.users.filter(u => u.active && !u.isGM);
+let gm = game.users.find(u => u.isGM);
+let playerOptions = players.reduce((options, player) => {
+  options[player.id] = player.name;
+  return options;
+}, {});
+
+new Dialog({
+  title: "Select Players to Whisper",
+  content: `
+    <style>
+      .whisper-dialog {
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        padding: 10px;
+      }
+      .whisper-dialog .form-group {
+        margin-bottom: 15px;
+      }
+      .whisper-dialog label {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+      .whisper-dialog #player-checkboxes {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .whisper-dialog #player-checkboxes div {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      .whisper-dialog #player-checkboxes input {
+        margin-right: 10px;
+      }
+      .whisper-dialog textarea {
+        width: 100%;
+        border-radius: 5px;
+        padding: 5px;
+      }
+    </style>
+    <div class="whisper-dialog">
+      <div class="form-group">
+        <label>Select Players:</label>
+        <div id="player-checkboxes">
+          <div>
+            <input type="checkbox" id="player-${gm.id}" name="players" value="${gm.id}" checked disabled>
+            <label for="player-${gm.id}">GM</label>
+          </div>
+          ${Object.entries(playerOptions).map(([id, name]) => `
+            <div>
+              <input type="checkbox" id="player-${id}" name="players" value="${id}">
+              <label for="player-${id}">${name}</label>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Message:</label>
+        <textarea id="whisper-message" name="message" rows="4" cols="50" placeholder="Type your message here..."></textarea>
+      </div>
+    </div>
+  `,
+  buttons: {
+    whisper: {
+      icon: "<i class='fas fa-comment'></i>",
+      label: "Whisper",
+      callback: async (html) => {
+        let selectedPlayerIds = Array.from(html.find("input[name='players']:checked")).map(checkbox => checkbox.value);
+        let message = html.find("#whisper-message").val();
+        let formattedMessage = `<b>Whisper</b><br>
+                                <div style="border: 2px solid black; padding: 10px; border-radius: 5px; background-color: black; color: white;">
+                                  ${message}
+                                </div>`;
+        await ChatMessage.create({
+          user: game.user._id,
+          content: formattedMessage,
+          whisper: selectedPlayerIds
+        });
+        // Play sound for selected players and GM
+        AudioHelper.play({
+          src: "worlds/d-d-waterdeep-dragon-heist/audio/048_-_System%20sounds/notify-169186.ogg",
+          volume: 1,
+          autoplay: true,
+          loop: false
+        }, false);
+      }
+    },
+    cancel: {
+      icon: "<i class='fas fa-times'></i>",
+      label: "Cancel"
+    }
+  },
+  default: "whisper"
+}).render(true);
