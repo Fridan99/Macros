@@ -1,0 +1,70 @@
+/* Version: 2.1.5
+ * Creator: Fridan99
+ * Macro name: Beshaba and Tymora's Fate 
+ * Create a script macro, copy, paste and let the party begin
+ * Select the tokens you want to involve in a possible target, run the macro, and the name of the randomly chosen token will appear. 
+ * There are 1 part that have a delay of 0,5 sec (500 msec), modify the milliseconds to suit your needs.
+ * Now you can see the images of the selected tokens in the chat instead of their names. 
+ * If you click on the image of a token in the chat, the screen is centered over that token and a ping is sent on that token. 
+ */
+
+// Array of funny descriptions
+let descriptions = [
+    "🎲 Tymora's coin is in the air and Beshaba's eyes are on you! Will it land in your favor or will you be the butt of Beshaba's joke? The flip is in the air... 🎲",
+    "🌟 You're walking the tightrope between Tymora's favor and Beshaba's tricks. Will you keep your balance or take a tumble? Hold your breath, it's a long way down... 🌟",
+    "🧙‍♂️ Tymora has blessed you, but Beshaba is lurking in the shadows. Will you bask in the light or stumble in the dark? The magic is tingling... 🧙‍♂️",
+    "🐉 Tymora's luck dragon has chosen you, but Beshaba's mischievous imp is not far behind! Will you soar the skies or get tangled in mischief? The wind is picking up... 🐉",
+    "🎭 On the grand stage of Tymora and Beshaba, you're the star! Will you bask in the applause or trip over the props? The curtain is rising... 🎭",
+    "🎯 Tymora's lucky arrow is aimed at you, but so is Beshaba's jinxed dart! Will you catch the blessing or the curse? The target is set... 🎯",
+    "💫 You're caught in the cosmic dance of Tymora and Beshaba. Will you waltz with Lady Luck or stumble with the Maid of Misfortune? The music is playing... 💫",
+    "🍀 As Tymora's four-leaf clover spins in the wind and Beshaba's black cat crosses your path, the tokens await their fate. Will you find a pot of gold or trip over a horseshoe? Luck is in the air... 🍀",
+    "⏳ Tymora's hourglass is running, but Beshaba's clock is ticking backwards! Will you seize the moment or lose track of time? The sands are shifting... ⏳",
+    "🌈 You're at the end of Tymora's rainbow, but Beshaba's storm is brewing! Will you find a treasure or get caught in the rain? The weather is changing... 🌈",
+    "🎩 Tymora's top hat is full of surprises, but watch out for Beshaba's rabbit hole! Will you pull out a magic trick or fall into a trap? The show is about to start... 🎩",
+    "🔮 Tymora's crystal ball is clear, but Beshaba's mirror is cracked! Will you see a bright future or face a twist of fate? The visions are swirling... 🔮",
+    "🍎 You're the apple of Tymora's eye, but beware of Beshaba's rotten fruit! Will you enjoy a sweet victory or taste a bitter defeat? The harvest is ready... 🍎",
+    "🌙 Under Tymora's crescent moon and Beshaba's starless night, the tokens stand ready. Will you bask in moonlight or lose your way in the dark? The night is whispering... 🌙"
+];
+
+// Display a random funny description and the selected tokens in the same chat card
+let randomDescription = descriptions[Math.floor(Math.random() * descriptions.length)];
+let tokens = canvas.tokens.controlled;
+let tokenImages = tokens.map(t => `<img src="${t.document.texture.src}" width="50" height="50" style="border: 1px solid #000; border-radius: 4px; margin: 2px;" data-token-id="${t.id}">`);
+
+if (tokenImages.length === 0) {
+    ui.notifications.warn("No tokens selected.");
+} else {
+    let randomToken = tokens[Math.floor(Math.random() * tokens.length)];
+
+    ChatMessage.create({
+        content: `<div style="background: linear-gradient(to bottom, #e6ccff, #ffcc99); padding: 8px; border-radius: 4px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">
+            <p style="font-size: 13px; font-weight: bold; color: #000000; margin-bottom: 4px;">${randomDescription}</p>
+            <br>
+            <p style="font-size: 13px; color: #000000; margin-bottom: 4px;"><b>Selected tokens:</b></p>
+            <p>${tokenImages.join(" ")}</p>
+        </div>`
+    });
+
+    // Delay the display of "the chosen is:" and the randomly chosen token by 0.5 seconds
+    setTimeout(function() {
+        ChatMessage.create({
+            content: `<div style="background: linear-gradient(to bottom, #e6ccff, #ffcc99); padding: 8px; border-radius: 4px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">
+                <p style="font-size: 13px; color: #000000; margin-bottom: 4px;"><b>The chosen is:</b></p>
+                <p><img src="${randomToken.document.texture.src}" width="50" height="50" style="border: 1px solid blue; border-radius: 4px; margin: 2px;" data-token-id="${randomToken.id}"></p>
+            </div>`
+        });
+    }, 500);
+}
+
+// Add event listener to handle clicks on token images
+Hooks.on('renderChatMessage', (app, html, data) => {
+    html.find('img[data-token-id]').click(ev => {
+        let tokenId = ev.currentTarget.dataset.tokenId;
+        let token = canvas.tokens.get(tokenId);
+        if (token) {
+            canvas.animatePan({ x: token.x, y: token.y, scale: 1.5 });
+            token.control({ releaseOthers: true });
+            canvas.ping(token.center);
+        }
+    });
+});
