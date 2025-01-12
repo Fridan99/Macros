@@ -1,0 +1,137 @@
+/* Version: 1.0.0
+ * Creator: Fridan99
+ * Need the Item Macro module or midi-qol
+ * Go to the Item Macro or DIME tab above, of the Contact other Plane item and paste the code, set On use Macro: After Active Effects
+ * Put the item spell Contact other Plane in the character sheet of the actor 
+ * The GM is the only one who sees the relevant information whether it is public or private.
+ * Needs the Monk's Token Bar module
+ */
+
+let descriptions = [
+    "You feel a powerful presence from another plane, filling the air with an aura of ancient wisdom.",
+    "A mysterious energy envelops you, and you sense a connection with an otherworldly entity.",
+    "You reach out with your mind, and feel the consciousness of a demigod gently touch yours.",
+    "You close your eyes and when you open them, you're in a different realm, filled with the energy of a long-dead sage.",
+    "You whisper your questions into the void, and feel a mysterious presence wrap around you, ready to guide you.",
+    "You feel a warm, enigmatic energy envelop you as you reach out to the spirit of a long-dead sage.",
+    "You feel your consciousness expand, reaching out to touch an otherworldly presence.",
+    "A soft, ethereal light surrounds you, and you feel a connection with a mysterious entity from another plane.",
+    "You feel a gentle tug at your mind, a demigod making its presence known.",
+    "You reach out with your senses, and feel an otherworldly presence reach back."
+];
+
+let flavors = [
+    'As the incomprehensible knowledge floods your mind, you feel a sharp pain wrenching at your sanity',
+    'A wave of sage thoughts crashes into your consciousness, overwhelming you with dread',
+    'You reach out with your mind, but instead are met with an echo of madness that threatens to consume you',
+    'The whispers of the other plane invade your thoughts, spiraling you into a chaotic abyss',
+    'An intense pressure builds in your head as the connection falters, and reality begins to unravel',
+    'You grasp at the thread of knowledge, but it snaps back with a violent force, leaving you in disarray'
+];
+
+async function contactOtherPlaneResult(html, isPublic) {
+    let questions = [
+        html.find('[name="question1"]').val(),
+        html.find('[name="question2"]').val(),
+        html.find('[name="question3"]').val(),
+        html.find('[name="question4"]').val(),
+        html.find('[name="question5"]').val()
+    ];
+
+    let flavor = flavors[Math.floor(Math.random() * flavors.length)];
+
+    if (game.modules.get("monks-tokenbar")?.active) {
+        let roll = await game.MonksTokenBar.requestRoll([],
+            {
+                request: [{"type": "save", "key": "int"}],
+                dc: 15,
+                showdc: true,
+                silent: true,
+                fastForward: false,
+                flavor: flavor,
+                rollMode: 'roll'
+            }
+        );
+
+        let saveResult = roll.total >= 15;
+
+        let result = "";
+        if (!saveResult) {
+            let damageRoll = new Roll('6d6');
+            await damageRoll.evaluate({async: true});
+            if (game.dice3d) {
+                await game.dice3d.showForRoll(damageRoll, game.user, true);
+            }
+            let damageResult = `<div style="background-color: white; padding: 10px; border: 2px solid black;">
+                                    You are playing with dark and very powerful forces, if you fail the <b>Intelligence</b> saving throw you take <b><span style="color:blue">${damageRoll.total}</span></b> <b>psychic</b> damage and are <b>insane</b>.
+                                </div>`;
+            result = `${damageResult}`;
+        } else {
+            result = "";
+        }
+
+        let description = descriptions[Math.floor(Math.random() * descriptions.length)];
+
+        let questionContent = questions.map((question, index) => question ? `<b>Question ${index + 1}:</b> ${question}<br/>` : "").join("");
+
+        let gmGuidance = `<b>GM can answer</b> as <b>"yes"</b>, <b>"no</b>", "<b>maybe</b>", <b>"never"</b>, <b>"irrelevant"</b>, or <b>"unclear"</b> (if the entity doesn't know the answer to the question). If a one-word answer would be misleading, then offer a short phrase as an answer.`;
+
+        // Send the casting message, description, questions, and result to the chat in one card
+        ChatMessage.create({
+            user: game.user._id,
+            speaker: { alias: token.name },
+            content: `<b>${token.name}</b> is casting <i>Contact Other Plane</i> spell......<br/><br/>${description}<br/><br/>${questionContent}<br/><b>The entity takes its time to give you an answer...but...</b><br/><br/>${result}<br/><br/>${gmGuidance}`,
+            whisper: isPublic ? null : ChatMessage.getWhisperRecipients("GM")
+        });
+    } else {
+        ui.notifications.error("Monk's Token Bar module is not active.");
+    }
+}
+
+if (!token) {
+    ui.notifications.error("No token selected. Please select a token before casting the spell.");
+} else {
+    ui.notifications.info("Preparing to contact another plane...");
+
+    new Dialog({
+        title: 'Ask your questions',
+        content: `
+            <form style="background: linear-gradient(to bottom, purple, black); border-radius: 15px; padding: 20px; border: 2px solid #ffff00;">
+                <h2 style="color: white; text-align: center;">Contact Other Plane</h2>
+                <p style="color: white; font-size: 16px;">If you want to make public your questions and answers, let empty the questions field and press <b style="color: white;">Skip</b></p>
+                <p style="color: white; font-size: 16px;">If you want to make secretly your questions and answers, fill the questions and press <b style="color: white;">Secretly</b></p>
+                <div class="form-group">
+                    <label style="color: white; font-size: 14px;">Question 1:</label>
+                    <input name="question1" type="text" style="width: 100%; padding: 12px 20px; margin: 8px 0; box-sizing: border-box; color: white; background-color: transparent;"/>
+                </div>
+                <div class="form-group">
+                    <label style="color: white; font-size: 14px;">Question 2:</label>
+                    <input name="question2" type="text" style="width: 100%; padding: 12px 20px; margin: 8px 0; box-sizing: border-box; color: white; background-color: transparent;"/>
+                </div>
+                <div class="form-group">
+                    <label style="color: white; font-size: 14px;">Question 3:</label>
+                    <input name="question3" type="text" style="width: 100%; padding: 12px 20px; margin: 8px 0; box-sizing: border-box; color: white; background-color: transparent;"/>
+                </div>
+                <div class="form-group">
+                    <label style="color: white; font-size: 14px;">Question 4:</label>
+                    <input name="question4" type="text" style="width: 100%; padding: 12px 20px; margin: 8px 0; box-sizing: border-box; color: white; background-color: transparent;"/>
+                </div>
+                <div class="form-group">
+                    <label style="color: white; font-size: 14px;">Question 5:</label>
+                    <input name="question5" type="text" style="width: 100%; padding: 12px 20px; margin: 8px 0; box-sizing: border-box; color: white; background-color: transparent;"/>
+                </div>
+            </form>
+        `,
+        buttons: {
+            skip: {
+                label: 'Skip',
+                callback: html => contactOtherPlaneResult(html, true)
+            },
+            submit: {
+                label: 'Secretly',
+                callback: html => contactOtherPlaneResult(html, false)
+            }
+        },
+        default: 'submit'
+    }).render(true);
+}
