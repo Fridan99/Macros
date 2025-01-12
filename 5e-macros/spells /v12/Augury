@@ -1,0 +1,82 @@
+/* Version: 1.0.0
+ * Creator: Fridan99
+ * Need the Item Macro module or midi-qol
+ * Go to the Item Macro or DIME tab above, of the Animal Messenger spell item and paste the code, set On use Macro: After Active Effects
+ * Put the item spell nimal Messenger in the character sheet of the actor
+ * Let's run the macro. The macro autolimits the message text to 25 words.  
+ * The GM and the player are the only ones who sees the relevant information in private mode. 
+ */
+
+// Animal Messenger
+
+// Define the options
+let messageContent = `
+    <form style="background: linear-gradient(to right, #ffffff, #d9f2f8); border-radius: 15px; padding: 20px;">
+        <div style="margin-bottom: 10px;">
+            <label><input type="radio" name="visibility" value="public" checked> 🕊️ Public</label>
+            <label><input type="radio" name="visibility" value="private"> 🕊️ Private</label>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Specify a location, which you must have visited:</label>
+            <input type="text" name="location" style="width:100%; border-radius: 5px;">
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Give a general description of an objective:</label>
+            <input type="text" name="objective" style="width:100%; border-radius: 5px;">
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Write your message (up to 25 words):</label>
+            <textarea id="message" name="message" rows="3" style="width:100%; border-radius: 5px;" maxlength="250"></textarea>
+        </div>
+    </form>
+`;
+
+new Dialog({
+    title: "Animal Messenger",
+    content: messageContent,
+    buttons: {
+        send: {
+            icon: "<i class='fas fa-check'></i>",
+            label: "Send",
+            callback: async (html) => {
+                let visibility = html.find('[name="visibility"]:checked').val();
+                let location = html.find('[name="location"]').val();
+                let objective = html.find('[name="objective"]').val();
+                let message = html.find('[name="message"]').val().trim();
+
+                let words = message.split(/\s+/).filter(word => word.match(/\w+/));
+
+                let finalMessage = `
+                    <b>Animal Messenger Details</b><br><br>
+                    <b>Location:</b> ${location}<br>
+                    <b>Objective:</b> ${objective}<br>
+                    <b>Message:</b> ${words.slice(0, 25).join(' ')}<br><br>
+                    The message has been communicated on: <b>${visibility.charAt(0).toUpperCase() + visibility.slice(1)}</b>
+                `;
+
+                if (visibility === "public") {
+                    ChatMessage.create({
+                        user: game.user._id,
+                        speaker: ChatMessage.getSpeaker(),
+                        content: finalMessage
+                    });
+                } else {
+                    ChatMessage.create({
+                        user: game.user._id,
+                        speaker: ChatMessage.getSpeaker(),
+                        content: finalMessage,
+                        whisper: ChatMessage.getWhisperRecipients("GM")
+                    });
+                }
+            }
+        }
+    },
+    render: function(html) {
+        html.find('#message').on('input', function() {
+            let words = this.value.split(/\s+/).filter(word => word.match(/\w+/));
+            if (words.length > 25 || (words.length === 25 && !this.value.endsWith(' '))) {
+                this.value = words.slice(0, 25).join(' ') + ' ';
+            }
+        });
+    }
+}).render(true);
