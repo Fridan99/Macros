@@ -1,4 +1,4 @@
-/* Version: 1.0.1
+/* Version: 1.1.1
  * Creator: Fridan99
  * Macro name: Whisper 
  * Create a script macro in the hotbar, copy, paste and let the party begin
@@ -10,7 +10,8 @@
 let players = game.users.filter(u => u.active && !u.isGM);
 let gm = game.users.find(u => u.isGM);
 let playerOptions = players.reduce((options, player) => {
-  options[player.id] = player.name;
+  let tokenImage = player.character?.prototypeToken?.texture.src || "icons/mystery-man.svg"; // Default image if no token
+  options[player.id] = { name: player.name, tokenImage: tokenImage };
   return options;
 }, {});
 
@@ -43,6 +44,12 @@ new Dialog({
       .whisper-dialog #player-checkboxes input {
         margin-right: 10px;
       }
+      .whisper-dialog #player-checkboxes img {
+        width: 40px; /* Increase token image size */
+        height: 40px;
+        border-radius: 50%;
+        margin-left: 10px; /* Add some space between name and image */
+      }
       .whisper-dialog textarea {
         width: 100%;
         border-radius: 5px;
@@ -57,10 +64,11 @@ new Dialog({
             <input type="checkbox" id="player-${gm.id}" name="players" value="${gm.id}" checked disabled>
             <label for="player-${gm.id}">GM</label>
           </div>
-          ${Object.entries(playerOptions).map(([id, name]) => `
+          ${Object.entries(playerOptions).map(([id, { name, tokenImage }]) => `
             <div>
               <input type="checkbox" id="player-${id}" name="players" value="${id}">
               <label for="player-${id}">${name}</label>
+              <img src="${tokenImage}" alt="${name}" />
             </div>
           `).join('')}
         </div>
