@@ -93,7 +93,7 @@ new Dialog({
           volume: 1,
           autoplay: true,
           loop: false
-        }, false);
+        }, true);
       }
     },
     cancel: {
