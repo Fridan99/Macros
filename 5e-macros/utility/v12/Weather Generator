@@ -1,0 +1,411 @@
+/* Version: 1.0.0
+ * Creator: Fridan99
+ * Macro name: Weather Generator 
+ * Create a script macro in the hotbar, copy, paste and let the party begin
+ */
+let html = `
+    <style>
+        #weather-popup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f4f4f9;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 90%;
+        }
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        label {
+            font-weight: bold;
+            font-size: 13px;
+        }
+        select, input {
+            padding: 10px;
+            font-size: 13px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        select {
+            width: 100%;
+            height: 40px; 
+        }
+        input[type="number"] {
+            width: 100%;
+        }
+        select:focus {
+            outline: none;
+            border-color: #0078d4;
+        }
+    </style>
+
+    <form id="weather-popup-form">
+        <div class="form-section">
+            <label for="year">Year (e.g. 1369):</label>
+            <input type="number" id="year" value="1492" min="1000" max="9999">
+        </div>
+
+        <div class="form-section">
+            <label for="month">Month:</label>
+            <select id="month">
+                <option value="Hammer">Hammer (Deepwinter)</option>
+                <option value="Alturiak">Alturiak (The Claw of Winter)</option>
+                <option value="Ches">Ches (The Claw of Sunsets)</option>
+                <option value="Tarsakh">Tarsakh (The Claw of Storms)</option>
+                <option value="Mirtul">Mirtul (The Melting)</option>
+                <option value="Kythorn">Kythorn (The Time of Flowers)</option>
+                <option value="Flamerule">Flamerule (Summertide)</option>
+                <option value="Eleasias">Eleasias (Highsun)</option>
+                <option value="Eleint">Eleint (The Fading)</option>
+                <option value="Marpenoth">Marpenoth (Leaffall)</option>
+                <option value="Uktar">Uktar (The Rotting)</option>
+                <option value="Nightal">Nightal (The Drawing Down)</option>
+            </select>
+        </div>
+
+        <div class="form-section">
+            <label for="day">Day:</label>
+            <select id="day">
+                ${Array.from({length: 30}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('')}
+            </select>
+        </div>
+
+        <div class="form-section">
+            <label for="latitude">Latitude:</label>
+            <select id="latitude">
+                <option value="Arctic">Arctic</option>
+                <option value="Subarctic">Subarctic</option>
+                <option value="Temperate">Temperate</option>
+                <option value="Subtropical">Subtropical</option>
+                <option value="Tropical">Tropical</option>
+            </select>
+        </div>
+
+        <div class="form-section">
+            <label for="terrain">Terrain:</label>
+            <select id="terrain">
+                <option value="Coastal">Coastal</option>
+                <option value="Desert">Desert</option>
+                <option value="Forest">Forest</option>
+                <option value="Hills">Hills</option>
+                <option value="Mountains">Mountains</option>
+                <option value="Plains">Plains</option>
+                <option value="Swamp">Swamp</option>
+            </select>
+        </div>
+    </form>
+`;
+
+// Display the form in a dialog with the improved styling
+new Dialog({
+    title: "Weather Generator",
+    content: html,
+    buttons: {
+        generate: {
+            label: "Generate",
+            callback: async (html) => {
+                // Get selected values
+                const year = parseInt(html.find('#year').val());
+                const month = html.find('#month').val();
+                const day = parseInt(html.find('#day').val());
+                const latitude = html.find('#latitude').val();
+                const terrain = html.find('#terrain').val();
+
+                // Generate weather based on these selections
+                const weather = generateWeather(month, latitude, terrain, day);
+                
+                if (weather.error) {
+                    ChatMessage.create({content: weather.error});
+                    return;
+                }
+
+                // Output the weather in chat with enhanced message styling
+let output = `
+    <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.5; font-size: 13px;">
+        <div style="background-color: #0078d4; color: #fff; padding: 10px; border-radius: 5px; text-align: center; font-size: 14px; font-weight: bold;">
+            <strong>Weather for ${month} ${day}, ${year} DR</strong>
+        </div>
+
+        <div style="margin: 15px 0; padding: 15px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+            <div style="margin-bottom: 10px;">
+                <strong style="color: #0078d4;">Temperature:</strong><br>
+                <span style="color: #ff7f50;">Low: ${weather.tempLow}°F (${weather.tempLowC}°C)</span><br>
+                <span style="color: #ff7f50;">High: ${weather.tempHigh}°F (${weather.tempHighC}°C)</span><br>
+                <span style="color: #ff7f50;">Effective Temperature: ${weather.effectiveTemp}</span>
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <strong style="color: #0078d4;">Winds:</strong><br>
+                <span>From ${weather.windDirection} at ${weather.windSpeed} mph (${weather.windSpeedKmh} km/h)</span><br>
+                <span style="font-style: italic;">Wind Strength: ${getWindSpeedDescription(weather.windSpeed)}</span>
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <strong style="color: #0078d4;">Precipitation:</strong><br>
+                <span>${weather.precipitation}</span>
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <strong style="color: #0078d4;">Clouds:</strong><br>
+                <span>${weather.clouds}</span>
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <strong style="color: #0078d4;">Humidity:</strong><br>
+                <span>Morning: ${weather.humidityMorning}</span><br>
+                <span>Evening: ${weather.humidityEvening}</span>
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <strong style="color: #0078d4;">Sunrise & Daylight:</strong><br>
+                <span>Dawn is at: ${weather.dawn}</span><br>
+                <span>Daylight Hours: ${weather.daylightHours}</span>
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <strong style="color: #0078d4;">Selûne's Phase:</strong><br>
+                <span>${weather.moonPhase}</span>
+            </div>
+
+            <div style="padding: 10px; margin-top: 20px; background-color: #f0f0f0; border-radius: 5px;">
+                <strong>Special Note:</strong><br>
+                <span style="color: #ff4500;">${weather.note}</span>
+            </div>
+        </div>
+    </div>
+`;
+                
+                ChatMessage.create({ content: output });
+            }
+        }
+    }
+}).render(true);
+
+// Define cloud cover options
+const cloudCover = {
+    clear: "Clear skies",
+    partlyCloudy: "Partly cloudy skies",
+    cloudy: "Cloudy skies"
+};
+
+function getWindSpeedDescription(speed) {
+    if (speed === 0) {
+        return "None";
+    } else if (speed <= 4) {
+        return "Very Low";  
+    } else if (speed <= 10) {
+        return "Low";
+    } else if (speed <= 20) {
+        return "Moderate";
+    } else {
+        return "Strong";
+    }
+}
+
+// Weather generation function with realistic precipitation, snow, cloud cover, and adjusted probabilities
+function generateWeather(month, latitude, terrain, day) {
+    const temperatureRanges = {
+        "Hammer": { low: -10, high: 35 },
+        "Alturiak": { low: 15, high: 40 },
+        "Ches": { low: 35, high: 55 },
+        "Tarsakh": { low: 45, high: 65 },
+        "Mirtul": { low: 50, high: 70 },
+        "Kythorn": { low: 60, high: 80 },
+        "Flamerule": { low: 70, high: 95 },
+        "Eleasias": { low: 65, high: 85 },
+        "Eleint": { low: 50, high: 70 },
+        "Marpenoth": { low: 45, high: 60 },
+        "Uktar": { low: 35, high: 55 },
+        "Nightal": { low: 20, high: 40 }
+    };
+
+    const windSpeedRanges = {
+        "Arctic": { min: 10, max: 30 },
+        "Subarctic": { min: 8, max: 25 },
+        "Temperate": { min: 5, max: 20 },
+        "Subtropical": { min: 5, max: 15 },
+        "Tropical": { min: 2, max: 10 }
+    };
+
+    const precipitationProbabilities = {
+        "Arctic": 0.3,
+        "Subarctic": 0.25,
+        "Temperate": 0.2,
+        "Subtropical": 0.2,
+        "Tropical": 0.1
+    };
+
+    const snowProbability = {
+        "Arctic": 0.9,
+        "Subarctic": 0.7,
+        "Temperate": (["Flamerule", "Eleasias"].includes(month)) ? 0.0 : 0.4,
+        "Subtropical": (["Flamerule", "Eleasias"].includes(month)) ? 0.0 : 0.1,
+        "Tropical": 0.0
+    };
+
+    const cloudCoverProbabilities = {
+        "Arctic": { clear: 0.1, partlyCloudy: 0.4, cloudy: 0.5 },
+        "Subarctic": { clear: 0.2, partlyCloudy: 0.5, cloudy: 0.3 },
+        "Temperate": { clear: 0.3, partlyCloudy: 0.4, cloudy: 0.3 },
+        "Subtropical": { clear: 0.4, partlyCloudy: 0.4, cloudy: 0.2 },
+        "Tropical": { clear: 0.5, partlyCloudy: 0.3, cloudy: 0.2 }
+    };
+
+    const humidityRanges = {
+        "Hammer": { morning: "High", evening: "High" },
+        "Alturiak": { morning: "Moderate", evening: "High" },
+        "Ches": { morning: "Moderate", evening: "High" },
+        "Tarsakh": { morning: "Moderate", evening: "High" },
+        "Mirtul": { morning: "Moderate", evening: "Moderate" },
+        "Kythorn": { morning: "Low", evening: "Moderate" },
+        "Flamerule": { morning: "Low", evening: "Moderate" },
+        "Eleasias": { morning: "Low", evening: "Moderate" },
+        "Eleint": { morning: "Moderate", evening: "High" },
+        "Marpenoth": { morning: "Moderate", evening: "High" },
+        "Uktar": { morning: "Moderate", evening: "High" },
+        "Nightal": { morning: "High", evening: "High" }
+    };
+
+    const tempLow = Math.round(randomInRange(temperatureRanges[month].low, temperatureRanges[month].high));
+    const tempHigh = Math.round(randomInRange(tempLow, temperatureRanges[month].high + 20));
+    const windSpeed = Math.round(randomInRange(windSpeedRanges[latitude].min, windSpeedRanges[latitude].max));
+    const windDirection = (Math.random() < 0.5) ? "North" : "South";
+    
+    // Decide if there's precipitation
+    const precipChance = Math.random();
+    let precipitation = "None";
+    let clouds = cloudCover.clear;
+    if (precipChance < precipitationProbabilities[latitude]) {
+        if (Math.random() < snowProbability[latitude]) {
+            precipitation = "Snow";
+            clouds = cloudCover.partlyCloudy;
+        } else {
+            precipitation = "Rain";
+            clouds = cloudCover.partlyCloudy;
+        }
+    }
+
+    // Adjust cloud cover with seasonality and latitude
+    if (Math.random() < cloudCoverProbabilities[latitude].cloudy) {
+        clouds = cloudCover.cloudy;
+    } else if (Math.random() < cloudCoverProbabilities[latitude].partlyCloudy) {
+        clouds = cloudCover.partlyCloudy;
+    }
+
+    const humidityMorning = humidityRanges[month].morning;
+    const humidityEvening = humidityRanges[month].evening;
+    const dawn = getDawnTime(month);
+    const daylightHours = calculateDaylightHours(month, day);
+    const moonPhase = getMoonPhase(day);
+    const note = getFestivalOrNote(month, day);
+
+    // Determine effective temperature
+    let effectiveTemp = "";
+    if (tempLow < 0) {
+        effectiveTemp = "Extremely Cold";
+    } else if (tempLow < 32) {
+        effectiveTemp = "Cold";
+    } else if (tempHigh > 95) {
+        effectiveTemp = "Extremely Hot";
+    } else if (tempHigh > 85) {
+        effectiveTemp = "Hot";
+    } else {
+        effectiveTemp = "Medium";
+    }
+
+    return {
+        tempLow: tempLow,
+        tempHigh: tempHigh,
+        tempLowC: Math.round(fahrenheitToCelsius(tempLow)),
+        tempHighC: Math.round(fahrenheitToCelsius(tempHigh)),
+        effectiveTemp,
+        windSpeed: windSpeed, 
+        windSpeedKmh: Math.round(windSpeed * 1.60934),
+        windDirection,
+        precipitation,
+        clouds,
+        humidityMorning,
+        humidityEvening,
+        dawn,
+        daylightHours,
+        moonPhase,
+        note
+    };
+}
+
+
+function randomInRange(min, max) {
+    return (Math.random() * (max - min)) + min;
+}
+
+function fahrenheitToCelsius(fahrenheit) {
+    return (fahrenheit - 32) * (5 / 9);
+}
+
+function getDawnTime(month) {
+    const dawnTimes = {
+        "Hammer": "8:00 AM",
+        "Alturiak": "7:30 AM",
+        "Ches": "7:00 AM",
+        "Tarsakh": "6:30 AM",
+        "Mirtul": "6:00 AM",
+        "Kythorn": "5:30 AM",
+        "Flamerule": "5:00 AM",
+        "Eleasias": "5:30 AM",
+        "Eleint": "6:00 AM",
+        "Marpenoth": "6:30 AM",
+        "Uktar": "7:00 AM",
+        "Nightal": "7:30 AM"
+    };
+
+    return dawnTimes[month];
+}
+
+function calculateDaylightHours(month, day) {
+    const daylightHoursMap = {
+        "Hammer": 6,
+        "Alturiak": 7,
+        "Ches": 9,
+        "Tarsakh": 10,
+        "Mirtul": 12,
+        "Kythorn": 14,
+        "Flamerule": 16,
+        "Eleasias": 15,
+        "Eleint": 13,
+        "Marpenoth": 10,
+        "Uktar": 9,
+        "Nightal": 7
+    };
+    
+    return daylightHoursMap[month];
+}
+
+function getMoonPhase(day) {
+    const phases = ["New Moon", "First Quarter", "Full Moon", "Last Quarter"];
+    return phases[(day % 4)];
+}
+
+function getFestivalOrNote(month, day) {
+    const festivals = {
+        "Hammer": "The Midwinter Festival is celebrated.",
+        "Alturiak": "A day of feasts marking the start of the year.",
+        "Ches": "A feast to honor the changing of the seasons.",
+        "Tarsakh": "The Great Parade for the Claw of Storms.",
+        "Mirtul": "A time of planting for the people.",
+        "Kythorn": "The start of the summer celebrations.",
+        "Flamerule": "The Sun's peak.",
+        "Eleasias": "The Harvest Festival begins.",
+        "Eleint": "The end of the summer festivities.",
+        "Marpenoth": "The Festival of the Leaves.",
+        "Uktar": "The last harvests are celebrated.",
+        "Nightal": "The start of the darkest winter days."
+    };
+
+    return festivals[month] || "No special event today.";
+}
