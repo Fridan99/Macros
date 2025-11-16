@@ -1,4 +1,4 @@
-/*Version: 1.2.3
+/*Version: 1.2.4
  * Creator: Fridan99
  * Colaborators: thatlonelybugbear, thx for the CSS part
  * Create a sript macro, then paste the code 
@@ -284,8 +284,7 @@ if (skill === 'Strength') {
     `;
   } else if (skill === 'Athletics') {
     content = `
-    <h4 style="text-align:center;"><strong>ATHLETICS</strong></h4>
-    <hr>
+ <p style="text-align:center; font-weight:bold;"><small>ATHLETICS</small></p>
 <p><small>● If you are <span style="color:red;">proficient in the Athletics</span>, you automatically succeed any swim or climb check <strong>DC 10</strong> or lower.</small></p>
     <hr>
     <p><small>Your Strength (Athletics) check covers difficult situations you encounter while climbing, jumping, or swimming. Examples include the following activities:<br>
@@ -298,8 +297,7 @@ if (skill === 'Strength') {
     `;
   } else if (skill === 'Deception') {
     content = `
-    <h4 style="text-align:center;"><strong>DECEPTION</strong></h4>
-    <hr>  
+ <p style="text-align:center; font-weight:bold;"><small>DECEPTION</small></p>
 <p><small>Your Charisma (Deception) check determines whether you can convincingly hide the truth, either verbally or through your actions. This deception can encompass everything from misleading others through ambiguity to telling outright lies.<br> 
 
 <p class="indent"><strong>Typical situations</strong>: trying to fast-talk a guard, con a merchant, earn money through gambling, pass yourself off in a disguise, dull someone’s suspicions with false assurances, or maintain a straight face while telling a blatant lie, cheat in a game, contested by <strong>Wisdom (Insight)</strong> check.</small>
@@ -579,8 +577,7 @@ content = `
     `;
   } else if (skill === 'Stealth') {
     content = `
-    <h4 style="text-align:center;"><strong>STEALTH</strong></h4>
-    <hr>
+ <p style="text-align:center; font-weight:bold;"><small>STEALTH</small></p>
     <p><small> Make a Dexterity (Stealth) check when you attempt to conceal yourself from enemies, slink past guards, slip away without being noticed, or sneak up on someone without being seen or heard.</small>
 <hr>
 <p><small>A character who has <span style="color:red;">proficiency in the Stealth</span> can take disadvantage on the check to grant advantage to another party member’s check (essentially compensating for a less stealthy companion).</small></p>
